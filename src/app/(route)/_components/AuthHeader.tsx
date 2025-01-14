@@ -40,7 +40,7 @@ const AuthHeader: FC<AuthHeaderProps> = ({}) => {
             
               />
             </div>
-            <p className="text-lg font-bold ml-3">
+            <p className="text-lg font-bold text-white  ml-3">
             Help Buddy
           </p>
           </Link>

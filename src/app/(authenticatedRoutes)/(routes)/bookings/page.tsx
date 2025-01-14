@@ -156,8 +156,8 @@ const BookingsPage: FC<pageProps> = ({}) => {
 							<button
 								className={`${
 									currentStatus === item.split(" ")[0].toLowerCase() &&
-									" text-[#399878]"
-								} text-afruna-blue text-sm md:text-base font-bold relative flex flex-col `}
+									" text-[#399839]"
+								} text-[#090f29] text-sm md:text-base font-bold relative flex flex-col `}
 								key={idx}
 								onClick={() =>
 									handleTabSelect(

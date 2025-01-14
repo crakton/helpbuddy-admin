@@ -23,10 +23,12 @@ import { ItemPicker } from "@/lib/utils/ItemPicker";
 import { AiFillAccountBook } from "react-icons/ai";
 import Auth from "@/api/auth.service";
 
-interface MainHeaderProps {}
+interface MainHeaderProps {
+  sideNavOpen:boolean,
+  setSideNavOpen:any 
+}
 
-const MainHeader: FC<MainHeaderProps> = ({}) => {
-  const [sideNavOpen, setSideNavOpen] = useState<boolean>(false);
+const MainHeader: FC<MainHeaderProps> = ({sideNavOpen, setSideNavOpen}) => {
   const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(true);
   const [selectedcategory, setselectedCategory] = useState("");
 

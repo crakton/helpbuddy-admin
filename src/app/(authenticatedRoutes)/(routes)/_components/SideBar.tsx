@@ -11,9 +11,11 @@ import { imgs } from "@/constants/images";
 import { usePathname, useRouter } from "next/navigation";
 import Auth from "@/api/auth.service";
 
-interface SideBar {}
+interface SideBarProps {
+	sideNavOpen:boolean
+}
 
-const SideBar: FC<SideBar> = ({}) => {
+const SideBar: FC<SideBarProps> = ({sideNavOpen}) => {
 	const accountRoutes = useRoute();
 	const pathname = usePathname();
 
@@ -30,7 +32,11 @@ const SideBar: FC<SideBar> = ({}) => {
 	return (
 		<>
 			{/* <div className="fixed top-32 left-0 bottom-0">ghsdjsdjhjhhjhj</div> */}
-			<aside className="hidden sm:block z-10 fixed top-20 left-0 bottom-2">
+			<aside
+  className={`${
+    sideNavOpen ? "translate-x-0 z-20" : "-translate-x-full"
+  } sm:translate-x-0 fixed top-20 left-0 bottom-2 transition-transform duration-300 ease-in-out sm:transition-none z-10`}
+>
 				<div className="flex flex-col gap-12 justify-between  h-full w-full overflow-y-auto">
 					<div className="w-full h-full bg-[#F4F5FF] my-2 ml-2 mr-4 rounded-lg max-w-[11rem] px-1 pt-7 flex flex-col gap-2">
 						{accountRoutes.map(

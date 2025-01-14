@@ -9,18 +9,18 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
 export default class Reviews {
-	private store: TStore;
+  private store: TStore;
 
-	constructor() {
-		this.store = store;
-	}
+  constructor() {
+    this.store = store;
+  }
 
-	async getReviews() {
-		try {
-		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
-		} finally {
-			store.dispatch(setLoading(false));
-		}
-	}
+  async getReviews() {
+    try {
+    } catch (error) {
+      handleAuthErrors(error as AxiosError<TErrorResponse>);
+    } finally {
+      store.dispatch(setLoading(false));
+    }
+  }
 }
