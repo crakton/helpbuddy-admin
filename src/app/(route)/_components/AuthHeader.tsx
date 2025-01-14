@@ -27,19 +27,22 @@ const AuthHeader: FC<AuthHeaderProps> = ({}) => {
   const HELP = ["FAQs", "Contact Us"];
 
   return (
-    <header className="sticky top-0 bg-gradient-to-r from-orange-300 to-orange-50 z-30">
+    <header className="sticky top-0 bg-gradient-to-r from-[#2a2c79] to-[#399878] z-30">
       <nav className="relative h-[5.5rem] pt-5 md:pt-0 flex items-center justify-between max-w-[90%] mx-auto">
         <div className="flex w-full md:justify-center md:items-center">
-          <Link href={"/"} className="flex justify-center items-center">
-            <div className="w-[10rem] h-[2.5rem] md:w-[14rem] md:h-[3rem] overflow-hidden relative">
+          <Link href={"/"} className="flex items-center">
+       
+            <div className=" relative">
               <Image
                 src={imgs.afruna_logo}
                 alt="logo"
-                priority
-                fill
-                // className="object-contain"
+                className="object-contain w-14 h-14"
+            
               />
             </div>
+            <p className="text-lg font-bold ml-3">
+            Help Buddy
+          </p>
           </Link>
         </div>
         <ItemPicker
@@ -53,12 +56,12 @@ const AuthHeader: FC<AuthHeaderProps> = ({}) => {
           getSelected={handleHelpSelection}
           items={HELP}
           placeholder="Help!"
-          extraComponent={
-            <button className="bg-gradient-to-b from-blue-400 to-blue-900 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition duration-500 my-2 w-full text-white p-2 rounded-md flex items-center justify-center space-x-2">
-              <MdSupportAgent className="text-xl" />
-              <span className="text-md">Live Chat</span>
-            </button>
-          }
+          // extraComponent={
+          //   <button className="bg-gradient-to-b from-blue-400 to-blue-900 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition duration-500 my-2 w-full text-white p-2 rounded-md flex items-center justify-center space-x-2">
+          //     <MdSupportAgent className="text-xl" />
+          //     <span className="text-md">Live Chat</span>
+          //   </button>
+          // }
         />
       </nav>
     </header>

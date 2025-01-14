@@ -119,13 +119,13 @@ const BookingsPage: FC<pageProps> = ({}) => {
 		}
 	}, [currentStatus]);
 
-	useEffect(() => {
-		const bookingApis = new Booking();
-		bookingApis.getBookings(Number(page));
-		return () => {
-			store.dispatch(setStatus("all"));
-		};
-	}, [page]);
+	// useEffect(() => {
+	// 	const bookingApis = new Booking();
+	// 	bookingApis.getBookings(Number(page));
+	// 	return () => {
+	// 		store.dispatch(setStatus("all"));
+	// 	};
+	// }, [page]);
 
 	return (
 		<section className="flex flex-col gap-6 pb-12">
@@ -156,7 +156,7 @@ const BookingsPage: FC<pageProps> = ({}) => {
 							<button
 								className={`${
 									currentStatus === item.split(" ")[0].toLowerCase() &&
-									" text-sky-500"
+									" text-[#399878]"
 								} text-afruna-blue text-sm md:text-base font-bold relative flex flex-col `}
 								key={idx}
 								onClick={() =>
@@ -169,13 +169,13 @@ const BookingsPage: FC<pageProps> = ({}) => {
 								<div
 									className={`${
 										currentStatus === item.split(" ")[0].toLowerCase() &&
-										"bg-sky-500"
+											"bg-[#399878]"
 									} w-full h-[2px] absolute -bottom-[0.35rem]`}
 								/>
 							</button>
 						))}
 					</div>
-					<div className="bg-orange-200 w-full h-[2px] " />
+					<div className="bg-[#399878] w-1/3 h-[2px] mt-[2px]" />
 				</div>
 				{/* Bookings table */}
 				<Component.type />

@@ -315,7 +315,7 @@ const BookingsTable: FC<BookingTableProps> = () => {
           </table>
         ) : (
           <h3 className="flex justify-center text-sm text-slate-500 h-full items-center">
-            Currently, No Client as book for any sevice yet
+            Currently, No services booked yet
           </h3>
         )}
       </div>

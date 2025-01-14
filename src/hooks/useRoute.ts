@@ -83,13 +83,13 @@ export const useRoute = () => {
         href: "/transactions",
         hasSubNav: false,
       },
-      {
-        title: "Chat",
-        icon: MdChat,
-        active: pathname === "/chat" || !!userTOChatId,
-        href: "/chat",
-        hasSubNav: false,
-      },
+      // {
+      //   title: "Chat",
+      //   icon: MdChat,
+      //   active: pathname === "/chat" || !!userTOChatId,
+      //   href: "/chat",
+      //   hasSubNav: false,
+      // },  
       {
         title: "Review",
         icon: MdReviews,

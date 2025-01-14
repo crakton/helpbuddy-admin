@@ -157,7 +157,7 @@ const AuthForm: FC<AuthFormProps> = ({}) => {
 							Remember me
 						</label>
 					</div>
-					<button type="button" className="text-afruna-gold font-semibold">
+					<button type="button" className="text-blue-500 font-semibold">
 						Forgot password?
 					</button>
 				</fieldset>

@@ -182,7 +182,7 @@ const Page: FC<pageProps> = ({}) => {
 							<button
 								className={`${
 									currentStatus === item.split(" ")[0].toLowerCase() &&
-									" text-sky-500"
+									" text-[#399878]"
 								} text-afruna-blue text-sm md:text-base font-bold relative flex flex-col `}
 								key={idx}
 								onClick={() =>
@@ -195,13 +195,13 @@ const Page: FC<pageProps> = ({}) => {
 								<div
 									className={`${
 										currentStatus === item.split(" ")[0].toLowerCase() &&
-										"bg-sky-500"
+										"bg-[#399878]"
 									} w-full h-[2px] absolute -bottom-[0.35rem]`}
 								/>
 							</button>
 						))}
 					</div>
-					<div className="bg-orange-200 w-full h-[2px] " />
+					<div className="bg-[#aae0ce] w-1/2 h-[2px] " />
 				</div>
 
 				{/* {searchResult.map(ser => {

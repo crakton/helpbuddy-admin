@@ -25,7 +25,7 @@ const buttonVariants = cva(
 
         greenbutton: "text-black bg-green-400 text-sm hover:bg-green-300",
         primary:
-          "text-white bg-gradient-to-b from-blue-400 to-blue-900 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition duration-500",
+          "text-white bg-gradient-to-b from-green-400 to-blue-600 hover:bg-gradient-to-r hover:from-green-500 hover:to-green-800 transition duration-500",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",

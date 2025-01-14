@@ -31,8 +31,8 @@ const SideBar: FC<SideBar> = ({}) => {
 		<>
 			{/* <div className="fixed top-32 left-0 bottom-0">ghsdjsdjhjhhjhj</div> */}
 			<aside className="hidden sm:block z-10 fixed top-20 left-0 bottom-2">
-				<div className="flex flex-col gap-12 justify-between h-full w-full overflow-y-auto">
-					<div className="w-full h-full bg-[#F4F5FF] my-2 ml-2 mr-4 rounded-lg max-w-[11rem] px-1 pt-3 flex flex-col gap-2">
+				<div className="flex flex-col gap-12 justify-between  h-full w-full overflow-y-auto">
+					<div className="w-full h-full bg-[#F4F5FF] my-2 ml-2 mr-4 rounded-lg max-w-[11rem] px-1 pt-7 flex flex-col gap-2">
 						{accountRoutes.map(
 							({ active, href, title, icon: Icon, hasSubNav }) => {
 								const subNav = [
@@ -108,7 +108,7 @@ const SideBar: FC<SideBar> = ({}) => {
 												<div
 													className={`${
 														active ? "opacity-100" : ""
-													} absolute -right-5 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-orange-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+													} absolute -right-5 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-[#399878] opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
 												/>
 											</Link>
 										)}
@@ -123,16 +123,16 @@ const SideBar: FC<SideBar> = ({}) => {
 							<TbLogout className="text-xl" />
 							Log out
 							<div
-								className={`absolute -right-5 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-orange-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+								className={`absolute -right-5 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full bg-red-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
 							/>
 						</Button>
 					</div>
 					<div className="w-full bg-[#F4F5FF] ml-2 mr-4 max-w-[11rem] px-4 flex flex-col gap-3">
-						<Link href={""}>
+						{/* <Link href={""}>
 							<div className="w-[6rem] h-[1.3rem] overflow-hidden relative">
 								<Image src={imgs.sidebarimg} alt="provider" priority fill />
 							</div>
-						</Link>
+						</Link> */}
 						<Link href={""} className="text-xs text-[#B9B9B9]">
 							Terms & Services Privacy Policy
 						</Link>

@@ -58,9 +58,9 @@ export const ItemPicker: FC<IItemPicker> = ({
                 <Link
                   key={name}
                   href={href}
-                  className={`flex gap-1 justify-start items-center hover:bg-orange-200 text-afruna-blue text-xs font-semibold rounded-md hover:cursor-pointer hover:scale-105 transition ease-in duration-300 w-full mx-auto py-[0.4rem] px-2 max-w-[90%]`}
+                  className={`flex gap-1 justify-start items-center hover:bg-[#bcf0df] text-slate-700 text-xs font-semibold rounded-md hover:cursor-pointer hover:scale-105 transition ease-in duration-300 w-full mx-auto py-[0.4rem] px-2 max-w-[90%]`}
                 >
-                  <span className="text-base">{icon}</span>
+                  <span className="text-base text-afruna-blue">{icon}</span>
                   <span>{name}</span>
                 </Link>
               ))}
