@@ -1,12 +1,7 @@
 import { T_booking_data } from "@/app/(authenticatedRoutes)/(routes)/dashboard/page";
-import { Colors } from "@/constants/data";
 import {
   FC,
-  JSXElementConstructor,
-  PromiseLikeOfReactNode,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
+ 
 } from "react";
 import {
   PieChart,
@@ -14,7 +9,6 @@ import {
   Cell,
   Legend,
   Tooltip,
-  ResponsiveContainer,
 } from "recharts";
 
 interface PieChartProps {
@@ -30,6 +24,24 @@ const Piechart: FC<PieChartProps> = ({ booking_statictics }) => {
   ];
 
   const COLORS = ["#14532d", "#1d4ed8", "#f97316", "#b91c1c"];
+
+  const renderLegend = ({booking_statictics}: PieChartProps) => {
+    return (
+      <ul className="flex gap-4 list-disc list-inside">
+        {booking_statictics.map((item, index) => (
+          <li 
+            key={`item-${index}`} 
+            className="text-xs"
+            style={{ color: COLORS[index] }}
+          >
+            {item.name}
+          </li>
+        ))}
+      </ul>
+    );
+  };
+  
+
 
   const CustomizedLegend = (props: {
     payload: {
@@ -86,7 +98,7 @@ const Piechart: FC<PieChartProps> = ({ booking_statictics }) => {
     <>
       <PieChart width={400} height={300}>
         <Pie
-          data={booking_statictics}
+          data={data}
           cx="50%"
           cy="50%"
           labelLine={false}
@@ -102,24 +114,47 @@ const Piechart: FC<PieChartProps> = ({ booking_statictics }) => {
               <Cell
                 //   key={`cell-${index}`}
                 key={_._id}
-                values="booking_statictics"
+                values={"value"}
                 strokeWidth={0.4}
                 strokeLinecap="round"
                 fill={COLORS[index % COLORS.length]}
               />
             ))}
         </Pie>
-        {/* <Tooltip /> */}
+        <Tooltip
+        offset={5}
+      cursor={{ stroke: 'rgba(100, 250, 0, 0.1)', strokeWidth: 2 }}
+      wrapperStyle={{
+        borderRadius: '8px',
+        boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        padding: '5px',
+        fontSize: '14px',
+        color: '#333',
+        border: '1px solid #ddd',
+      }}
+      contentStyle={{
+        borderRadius: '4px',
+        backgroundColor: '#274472',
+        border: 'none',
+        padding: '2px',
+      }}
+      itemStyle={{
+        color: '#A0E7E5',
+        fontSize:10
+      }}
+      labelStyle={{
+        fontWeight: 'bold',
+        color: '#111',
+      }}
+    />
         <Legend
-          key="booking_statictics"
+          key="name"
           align="left"
-          iconType="circle"
+          iconType="cross"
           iconSize={5}
-          fontSizeAdjust={0.5}
-          className="text-xs"
-        //   content={<CustomizedLegend payload={{
-        //       value: ""
-        //   }}/>}
+          
+          content={renderLegend({booking_statictics})}
         />
       </PieChart>
     </>

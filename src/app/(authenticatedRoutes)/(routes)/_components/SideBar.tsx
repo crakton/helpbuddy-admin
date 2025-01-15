@@ -12,10 +12,11 @@ import { usePathname, useRouter } from "next/navigation";
 import Auth from "@/api/auth.service";
 
 interface SideBarProps {
-	sideNavOpen:boolean
+	sideNavOpen:boolean,
+	setSideNavOpen:Function
 }
 
-const SideBar: FC<SideBarProps> = ({sideNavOpen}) => {
+const SideBar: FC<SideBarProps> = ({sideNavOpen, setSideNavOpen}) => {
 	const accountRoutes = useRoute();
 	const pathname = usePathname();
 
@@ -34,7 +35,7 @@ const SideBar: FC<SideBarProps> = ({sideNavOpen}) => {
 			{/* <div className="fixed top-32 left-0 bottom-0">ghsdjsdjhjhhjhj</div> */}
 			<aside
   className={`${
-    sideNavOpen ? "translate-x-0 z-20" : "-translate-x-full"
+    sideNavOpen ? "translate-x-0 z-50" : "-translate-x-full"
   } sm:translate-x-0 fixed top-20 left-0 bottom-2 transition-transform duration-300 ease-in-out sm:transition-none z-10`}
 >
 				<div className="flex flex-col gap-12 justify-between  h-full w-full overflow-y-auto">
@@ -104,6 +105,11 @@ const SideBar: FC<SideBarProps> = ({sideNavOpen}) => {
 														: ""
 												} w-full relative group py-2 pl-6 overflow-hidden rounded-md flex justify-between items-center font-medium text-sm text-[#A7B7DD] hover:text-slate-950 hover:font-extrabold hover:bg-slate-300 transition duration-300`}
 												href={href}
+
+												onClick={()=>{
+													setSideNavOpen (false)
+												
+												}}
 											>
 												<div className="flex justify-start gap-3 items-center ">
 													<Icon className="text-lg" />

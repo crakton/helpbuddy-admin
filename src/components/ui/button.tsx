@@ -19,7 +19,7 @@ const buttonVariants = cva(
         afrunaBlue:
           "font-semibold text-xs bg-sky-500 text-white",
         lightgradientblue:
-          "text-white bg-gradient-to-t from-blue-200 to-blue-600 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition duration-500",
+          "text-white bg-gradient-to-tr to-blue-400 from-[#399878] hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition duration-500",
         deepgradientblue:
           "text-white bg-gradient-to-t from-blue-500 to-blue-800 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition duration-500",
 

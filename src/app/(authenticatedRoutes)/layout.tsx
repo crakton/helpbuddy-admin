@@ -15,7 +15,7 @@ const [sideNavOpen, setSideNavOpen] = useState<boolean>(false);
     <div className="min-h-screen h-full">
       <MainHeader sideNavOpen={sideNavOpen} setSideNavOpen={setSideNavOpen} />
       <div className=" min-h-full h-full flex w-full bg-[#F7F7FF]">
-        <SideBar sideNavOpen={sideNavOpen} />
+        <SideBar sideNavOpen={sideNavOpen} setSideNavOpen={setSideNavOpen}/>
         <main className=" sm:ml-[11rem] w-full">{children}</main>
       </div>
     </div>

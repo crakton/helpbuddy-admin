@@ -19,4 +19,44 @@ export default class Booking {
 	constructor() {
 		this.store = store;
 	}
+
+	// Method to fetch bookings
+	public async fetchBookings(page: number = 1): Promise<void> {
+		this.store.dispatch(setLoading(true)); // Set loading state
+
+		try {
+			// Make API request
+			const response = await axios.get<TSuccessResponse<T_Bookings[]>>(
+				`/api/bookings?page=${page}`,
+				{ headers }
+			);
+
+			// Extract data
+			const { data, totalPages } = response.data;
+
+			// Update Redux state
+			this.store.dispatch(setBookings(data));
+			this.store.dispatch(setTotalPages(totalPages));
+		} catch (error) {
+			// Handle errors
+			if (axios.isAxiosError(error)) {
+				const axiosError = error as AxiosError<TErrorResponse>;
+				if (axiosError.response) {
+					// Show error toast
+					toast.error(axiosError.response.data.message || "An error occurred while fetching bookings.");
+				} else {
+					toast.error("Network error or server is unreachable.");
+				}
+			} else {
+				console.error("Unexpected error:", error);
+				toast.error("An unexpected error occurred.");
+			}
+
+			// Dispatch authentication error handling if needed
+			handleAuthErrors(error);
+		} finally {
+			// Reset loading state
+			this.store.dispatch(setLoading(false));
+		}
+	}
 }

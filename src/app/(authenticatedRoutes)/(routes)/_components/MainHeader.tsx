@@ -130,7 +130,7 @@ const MainHeader: FC<MainHeaderProps> = ({sideNavOpen, setSideNavOpen}) => {
             extraComponent={
               <button
                 onClick={handleLogOut}
-                className="bg-gradient-to-b from-blue-400 to-blue-900 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-800 transition duration-500 my-2 w-full text-white p-2 rounded-md flex items-center justify-center space-x-2"
+                className="bg-gradient-to-b from-red-400 to-orange-900 hover:bg-gradient-to-r hover:from-orange-900 hover:transition-all hover:to-red-400 ease-in-out duration-700 my-2 w-full text-white p-2 rounded-md flex items-center justify-center space-x-2"
               >
                 <MdOutlineLogout className="text-lg" />
                 <span className="text-md">Log out</span>
