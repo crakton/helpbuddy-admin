@@ -28,7 +28,7 @@ import { IServiceCategory } from "@/interfaces/IService";
 import { ImSpinner3 } from "react-icons/im";
 import { IoRemoveOutline } from "react-icons/io5";
 import { FaTimes } from "react-icons/fa";
-import Service from "@/api/service.service";
+import Service from "@/services/service.service";
 import {
 	setCatIcon,
 	setCatId,

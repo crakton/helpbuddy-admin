@@ -11,7 +11,7 @@ import {
 	setMessages,
 	setUserTOChatId,
 } from "@/redux/features/app/chat_slice";
-import ChatService from "@/api/chat.service";
+import ChatService from "@/services/chat.service";
 import { useSelector } from "react-redux";
 import { setLoading } from "@/redux/features/app/loading_slice";
 

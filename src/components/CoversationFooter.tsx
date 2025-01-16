@@ -1,7 +1,7 @@
 "use client";
 
 import { RootState } from "@/redux/store";
-import ChatService from "@/api/chat.service";
+import ChatService from "@/services/chat.service";
 import { FC } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { IoPaperPlane } from "react-icons/io5";
