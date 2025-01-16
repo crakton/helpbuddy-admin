@@ -7,7 +7,7 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { GoTrash } from "react-icons/go";
 import { TbUpload } from "react-icons/tb";
 import { toast } from "react-toastify";
-import Service from "@/api/service.service";
+import Service from "@/services/service.service";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState, store } from "@/redux/store";

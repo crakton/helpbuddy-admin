@@ -5,7 +5,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { UsersList } from "@/components/UsersList";
 import EmptyState from "@/components/EmptyState";
 import { Avatar } from "@/components/Avatar";
-import ChatService from "@/api/chat.service";
+import ChatService from "@/services/chat.service";
 import { useSelector } from "react-redux";
 import { RootState, store } from "@/redux/store";
 import { IUserBio } from "@/types/user";

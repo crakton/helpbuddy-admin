@@ -3,7 +3,7 @@
 import { ICustomerBio } from "@/types/customer";
 import useSearchCustomer from "@/hooks/useSearchCustomer";
 import { RootState } from "@/redux/store";
-import Customers from "@/api/customer.service";
+import Customers from "@/services/customer.service";
 import { useSearchParams } from "next/navigation";
 import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";

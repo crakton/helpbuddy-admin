@@ -7,7 +7,7 @@ import StatsDashboard from "@/components/StatsDashboard";
 import TopProviderTable from "@/components/TopProviderTable";
 import TopServiceTable from "@/components/TopServiceTable";
 import { buttonVariants } from "@/components/ui/button";
-import Dashboard from "@/api/dashboard.service";
+import Dashboard from "@/services/dashboard.service";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa";

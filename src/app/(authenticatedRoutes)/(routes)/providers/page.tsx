@@ -6,7 +6,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import ItemPicker from "@/components/ItemPicker";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import Provider from "@/api/provider.service";
+import Provider from "@/services/provider.service";
 import { useSearchParams } from "next/navigation";
 import Pagination from "../_components/Pagination";
 

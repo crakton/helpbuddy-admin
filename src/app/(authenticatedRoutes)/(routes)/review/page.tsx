@@ -2,7 +2,7 @@
 
 import ReviewsTable from "@/components/ReviewsTable";
 import { RootState } from "@/redux/store";
-import Reviews from "@/api/reviews.service";
+import Reviews from "@/services/reviews.service";
 import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 

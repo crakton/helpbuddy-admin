@@ -1,7 +1,7 @@
 "use client";
 
 import { RootState } from "@/redux/store";
-import Customers from "@/api/customer.service";
+import Customers from "@/services/customer.service";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { LoadingUserDetails } from "../../_components/LoadingUserDetails";

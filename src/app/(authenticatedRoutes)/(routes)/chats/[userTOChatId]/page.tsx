@@ -9,7 +9,7 @@ import { CoversationFooter } from "@/components/CoversationFooter";
 import EmptyState from "@/components/EmptyState";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import ChatService from "@/api/chat.service";
+import ChatService from "@/services/chat.service";
 import { ImSpinner3 } from "react-icons/im";
 import useSearchConvo from "@/hooks/useSearchConvo";
 

@@ -3,7 +3,7 @@
 import ItemPicker from "@/components/ItemPicker";
 import { Button } from "@/components/ui/button";
 import { RootState } from "@/redux/store";
-import Service from "@/api/service.service";
+import Service from "@/services/service.service";
 import { Dropzone, ExtFile, FileMosaic } from "@files-ui/react";
 import {
 	Label,

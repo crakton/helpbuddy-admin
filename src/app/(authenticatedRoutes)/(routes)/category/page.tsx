@@ -4,7 +4,7 @@ import CategoryTable from "@/components/CategoryTable";
 import ItemPicker from "@/components/ItemPicker";
 import { buttonVariants } from "@/components/ui/button";
 import { RootState } from "@/redux/store";
-import Service from "@/api/service.service";
+import Service from "@/services/service.service";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { FC, useEffect } from "react";

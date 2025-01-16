@@ -11,7 +11,7 @@ import {
 } from "@/redux/features/app/service_slice";
 import { setStatus } from "@/redux/features/app/table_status_slice";
 import { RootState, store } from "@/redux/store";
-import Service from "@/api/service.service";
+import Service from "@/services/service.service";
 import { FC, useEffect, useMemo } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { useSelector } from "react-redux";

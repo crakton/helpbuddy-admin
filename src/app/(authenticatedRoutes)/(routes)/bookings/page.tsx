@@ -7,7 +7,7 @@ import { IoSearchOutline } from "react-icons/io5";
 import { setStatus } from "@/redux/features/app/table_status_slice";
 import { RootState, store } from "@/redux/store";
 import { useSelector } from "react-redux";
-import Booking from "@/api/booking.service";
+import Booking from "@/services/booking.service";
 import {
 	setCanceledBookings,
 	setCompletedBookings,
@@ -57,7 +57,7 @@ const BookingsPage: FC<pageProps> = ({}) => {
 		switch (status) {
 			case "all":
 				store.dispatch(setStatus("all"));
-				bookingApis.getBookings();
+				// bookingApis.getBookings();
 				break;
 			case "pending":
 				store.dispatch(setStatus("pending"));
@@ -169,7 +169,7 @@ const BookingsPage: FC<pageProps> = ({}) => {
 								<div
 									className={`${
 										currentStatus === item.split(" ")[0].toLowerCase() &&
-											"bg-[#399878]"
+										"bg-[#399878]"
 									} w-full h-[2px] absolute -bottom-[0.35rem]`}
 								/>
 							</button>

@@ -6,7 +6,7 @@ import ItemPicker from "@/components/ItemPicker";
 import { Button } from "@/components/ui/button";
 import { imgs } from "@/constants/images";
 import { RootState, store } from "@/redux/store";
-import Provider from "@/api/provider.service";
+import Provider from "@/services/provider.service";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";

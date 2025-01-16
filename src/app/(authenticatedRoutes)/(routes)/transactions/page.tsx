@@ -2,7 +2,7 @@
 
 import OtherTransactionstable from "@/components/OtherTransactionstable";
 import { RootState } from "@/redux/store";
-import Transactions from "@/api/transactions.service";
+import Transactions from "@/services/transactions.service";
 import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 

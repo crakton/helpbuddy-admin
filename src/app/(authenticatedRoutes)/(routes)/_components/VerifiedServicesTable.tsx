@@ -18,7 +18,7 @@ import { IService } from "@/interfaces/IService";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ImSpinner3 } from "react-icons/im";
-import Service from "@/api/service.service";
+import Service from "@/services/service.service";
 import { toast } from "react-toastify";
 import * as Switch from "@radix-ui/react-switch";
 
