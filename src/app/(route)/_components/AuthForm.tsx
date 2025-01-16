@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import Auth from "@/api/auth.service";
+import Auth from "@/services/auth.service";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -35,12 +35,13 @@ const AuthForm: FC<AuthFormProps> = ({}) => {
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 	const onSubmit: SubmitHandler<FormData> = useCallback(
-		(data) => {
-			const validatedData = schema.parse(data);
+		async (data) => {
 			const authApis = new Auth(router);
-			authApis
-				.logIn(validatedData, { setIsLoading })
-				.then((data) => console.log(data));
+			console.log(data);
+
+			const user = await authApis.logIn(data);
+			console.log("user");
+			console.log(user);
 		},
 		[router]
 	);
@@ -55,6 +56,7 @@ const AuthForm: FC<AuthFormProps> = ({}) => {
 				{"User Login"}
 			</h1>
 			<form
+				action={"login"}
 				onSubmit={handleSubmit(onSubmit)}
 				className={clsx(
 					`max-w-[90%] w-full flex flex-col items-center mx-auto rounded-2xl shadow-md px-6 py-12 sm:pt-8 lg:pt-16 lg:pb-20 md:p-10
