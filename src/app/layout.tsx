@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/redux/Provider";
 import ModalProvider from "@/components/context/ModalContext";
-import ConnectDB from "@/backend/config/db";
 
 // const inter = Inter({ subsets: ["latin"] });
 

@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import LoadingCards from "../_components/LoadingCards";
 import LoadingChart from "../_components/LoadingChart";
+import withAuth from "@/utils/withAuth";
 
 interface pageProps {}
 
@@ -32,95 +33,14 @@ export type T_bar_data = {
 };
 
 const DashboardPage: FC<pageProps> = ({}) => {
-	const bar_data = [
-		{
-			name: "Jan",
-			booking: 4000,
-			Income: 2400,
-			// amt: 2400,
-		},
-		{
-			name: "Feb",
-			booking: 3000,
-			Income: 1398,
-			// amt: 2210,
-		},
-		{
-			name: "Mar",
-			booking: 2000,
-			Income: 9800,
-			// amt: 2290,
-		},
-		{
-			name: "Apr",
-			booking: 2780,
-			Income: 3908,
-			// amt: 2000,
-		},
-		{
-			name: "May",
-			booking: 1890,
-			Income: 4800,
-			// amt: 2181,
-		},
-		{
-			name: "Jul",
-			booking: 2390,
-			Income: 3800,
-			// amt: 2500,
-		},
-		{
-			name: "Aug",
-			booking: 2790,
-			Income: 1000,
-			// amt: 2500,
-		},
-		{
-			name: "Sep",
-			booking: 2390,
-			Income: 5800,
-			// amt: 900,
-		},
-		{
-			name: "Oct",
-			booking: 4390,
-			Income: 800,
-			// amt: 500,
-		},
-		{
-			name: "Nov",
-			booking: 2090,
-			Income: 1600,
-			// amt: 500,
-		},
-		{
-			name: "Dec",
-			booking: 1390,
-			Income: 1800,
-			// amt: 2000,
-		},
-		// Add more data... background: linear-gradient(180deg, #817AF3 0%, #74B0FA 47.92%, #79D0F1 100%);
-	];
-	const loading = useSelector((state: RootState) => state.loading.loading);
-	const [loadingSummary, setLoadingSummary] = useState<boolean>(true);
-	const [loadingStats, setLoadingStats] = useState<boolean>(true);
-	const [loadingTopSevices, setLoadingTopSevices] = useState<boolean>(true);
-	const [loadingTopProviders, setLoadingTopProviders] = useState<boolean>(true);
+	const [loading, SetLoading] = useState<boolean>(false);
+	const [loadingSummary, setLoadingSummary] = useState<boolean>(false);
+	const [loadingStats, setLoadingStats] = useState<boolean>(false);
+	const [loadingTopSevices, setLoadingTopSevices] = useState<boolean>(false);
+	const [loadingTopProviders, setLoadingTopProviders] =
+		useState<boolean>(false);
 	const [loadingRecentBookings, setLoadingRecentBookings] =
-		useState<boolean>(true);
-	useEffect(() => {
-		const dashboardApis = new Dashboard();
-		dashboardApis.getDashboardCards();
-		dashboardApis.getBookingsSummary().finally(() => setLoadingSummary(false));
-		dashboardApis.getDashboardStats().finally(() => setLoadingStats(false));
-		dashboardApis.getTopServices().finally(() => setLoadingTopSevices(false));
-		dashboardApis
-			.getTopProviders()
-			.finally(() => setLoadingTopProviders(false));
-		dashboardApis
-			.getRecentBookings()
-			.finally(() => setLoadingRecentBookings(false));
-	}, []);
+		useState<boolean>(false);
 
 	const bookingsSummary = useSelector(
 		(state: RootState) => state.dashboard?.bookingsSummary
@@ -181,10 +101,10 @@ const DashboardPage: FC<pageProps> = ({}) => {
 				) : (
 					cards &&
 					[
-						{
-							title: "Income",
-							number: `#${cards.totalEarnings}`,
-						},
+						// {
+						// 	title: "Income",
+						// 	number: `#${cards.totalEarnings}`,
+						// },
 						{
 							title: "Users",
 							number: `${cards.totalUsers}`,
@@ -209,9 +129,7 @@ const DashboardPage: FC<pageProps> = ({}) => {
 					</header>
 					{loadingSummary ? (
 						<LoadingChart />
-					) : bookingsSummary && bookingsSummary.length ? (
-						<Barchart bar_data={bar_data} />
-					) : (
+					) : bookingsSummary && bookingsSummary.length ? null : ( // <Barchart bar_data={bar_data} />
 						<div className="h-[300px] flex justify-center items-center bg-white shadow w-full">
 							Currently, there is no bookings summary
 						</div>
@@ -309,4 +227,4 @@ const DashboardPage: FC<pageProps> = ({}) => {
 	);
 };
 
-export default DashboardPage;
+export default withAuth(DashboardPage);

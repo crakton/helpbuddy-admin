@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { useRoute } from "@/hooks/useRoute";
 import Link from "next/link";
 import { FC, useCallback, useState } from "react";
-import Image from "next/image";
-import { imgs } from "@/constants/images";
 import { usePathname, useRouter } from "next/navigation";
 import Auth from "@/services/auth.service";
 
@@ -26,9 +24,9 @@ const SideBar: FC<SideBarProps> = ({ sideNavOpen, setSideNavOpen }) => {
 	const toggleSubNav = useCallback(() => setShowSubNav((prev) => !prev), []);
 	const router = useRouter();
 	const handleLogOut = useCallback(() => {
-		const authApis = new Auth(router);
+		const authApis = new Auth();
 		authApis.logout();
-	}, [router]);
+	}, []);
 
 	return (
 		<>
@@ -43,6 +41,10 @@ const SideBar: FC<SideBarProps> = ({ sideNavOpen, setSideNavOpen }) => {
 						{accountRoutes.map(
 							({ active, href, title, icon: Icon, hasSubNav }) => {
 								const subNav = [
+									{
+										title: "New Service",
+										href: "/services/new",
+									},
 									{
 										title: "Listed Services",
 										href: "/services",
@@ -87,7 +89,7 @@ const SideBar: FC<SideBarProps> = ({ sideNavOpen, setSideNavOpen }) => {
 																		pathname === href
 																			? "text-blue-400 font-extrabold"
 																			: ""
-																	}  text-[0.69rem] pl-[3.5rem]`}
+																	}  text-[0.69rem] pl-[3.5rem] py-1.5 hover:text-blue-400`}
 																>
 																	{title}
 																</Link>
