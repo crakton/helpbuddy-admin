@@ -1,6 +1,6 @@
 export enum EUserType {
 	User = "user",
-	Vendor = "vendor",
+	Provider = "provider",
 }
 export enum ETimePeriod {
 	ALL = "all",
