@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import ConnectDB from "@/backend/config/db";
 import UserModel from "@/backend/models/User";
+import { EUserType } from "@/constants/enums";
 
 // Ensure the database connection is initialized only once
 let isConnected = false;
@@ -57,10 +58,16 @@ export async function POST(
 					{ status: 401 }
 				);
 			}
+			if (fetchedUser.role === EUserType.User) {
+				return NextResponse.json(
+					{ success: false, message: "Restricted privileges" },
+					{ status: 401 }
+				);
+			}
 
 			return NextResponse.json({
 				success: true,
-				fetchedUser,
+				user: fetchedUser,
 				message: "Login successful",
 			});
 		}

@@ -1,17 +1,6 @@
+import { IUser } from "@/interfaces/IUser";
 import bcrypt from "bcrypt";
-import mongoose, { Document, Schema } from "mongoose";
-
-// Define the IUser interface extending Mongoose Document
-interface IUser extends Document {
-	name: string;
-	email: string;
-	phone?: string;
-	password: string;
-	status: "active" | "inactive" | "blocked";
-	role: "user" | "admin" | "provider";
-	createdAt: Date;
-	comparePassword(candidatePassword: string): Promise<boolean>;
-}
+import mongoose, { Schema } from "mongoose";
 
 // Define the User schema
 const UserSchema = new Schema<IUser>({

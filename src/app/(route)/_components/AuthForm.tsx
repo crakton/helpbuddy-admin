@@ -10,6 +10,9 @@ import { useRouter } from "next/navigation";
 import Auth from "@/services/auth.service";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch } from "react-redux";
+import { EUserType } from "@/constants/enums";
+import { login, updateUserBio } from "@/redux/features/auth/auth_slice";
 
 interface AuthFormProps {}
 
@@ -27,6 +30,7 @@ const AuthForm: FC<AuthFormProps> = ({}) => {
 		[]
 	);
 	const router = useRouter();
+	const dispatch = useDispatch();
 
 	const {
 		register,
@@ -36,14 +40,15 @@ const AuthForm: FC<AuthFormProps> = ({}) => {
 
 	const onSubmit: SubmitHandler<FormData> = useCallback(
 		async (data) => {
-			const authApis = new Auth(router);
-			console.log(data);
-
+			const authApis = new Auth();
 			const user = await authApis.logIn(data);
-			console.log("user");
-			console.log(user);
+
+			dispatch(login());
+			dispatch(updateUserBio(user));
+
+			router.replace("/dashboard");
 		},
-		[router]
+		[dispatch, router]
 	);
 	const [rememberMe, setRememberMe] = useState(false);
 	const handleRememberMe: ChangeEventHandler<HTMLInputElement> = useCallback(

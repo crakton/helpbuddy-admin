@@ -1,35 +1,60 @@
-import { AxiosError, isAxiosError } from "axios";
 import { redirect } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { TErrorResponse } from "../types/auth.types";
+type TErrorResponse = {
+	success: boolean;
+	message: string;
+};
 
-export function handleAuthErrors(error: AxiosError<TErrorResponse>) {
-	if (isAxiosError(error)) {
-		if (error.response) {
+export async function handleAuthErrors(error: unknown): Promise<void> {
+	if (error instanceof Response) {
+		// If the error is a Response object, handle it
+		const errorData: TErrorResponse = await error.json();
+
+		// Handle specific error messages
+		if (
+			errorData.message === "Invalid credentials" ||
+			errorData.message === "Restricted privileges" ||
+			errorData.message === "User not found"
+		) {
+			toast.error(errorData.message, {
+				position: "top-center",
+				autoClose: 2000,
+				hideProgressBar: true,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "colored",
+			});
+
+			// Redirect to the login page for invalid credentials
 			if (
-				error.response.data.message === "jwt expired" ||
-				error.response.data.message === "jwt malformed"
+				errorData.message === "Invalid credentials" ||
+				errorData.message === "Restricted privileges"
 			) {
-				toast.error(error.response.data.message)
-				redirect('/auth')
+				redirect("/");
 			}
-			//successful request with server response.
-			else
-				toast.error(error.response.data.message as string, {
-					position: "top-center",
-					autoClose: 2000,
-					hideProgressBar: true,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					theme: "colored",
-				});
-			return error.response.data;
-		} else if (error.request) {
-			// request made but no server response
-			toast.warn("Sorry! Something happened with us", {
+
+			return;
+		}
+
+		// Handle other general errors
+		toast.error(errorData.message || "An unexpected error occurred", {
+			position: "top-center",
+			autoClose: 2000,
+			hideProgressBar: true,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: "colored",
+		});
+	} else if (error instanceof Error) {
+		// Handle network errors or unexpected errors
+		toast.warn(
+			error.message || "Something went wrong. Please try again later.",
+			{
 				position: "top-center",
 				autoClose: 5000,
 				hideProgressBar: true,
@@ -38,13 +63,11 @@ export function handleAuthErrors(error: AxiosError<TErrorResponse>) {
 				draggable: true,
 				progress: undefined,
 				theme: "colored",
-			});
-			return error.request;
-		} else {
-            throw Error(JSON.stringify(error));
-		}
+			}
+		);
 	} else {
-		/* toast.error("Make sure you have an active internet connection!", {
+		// Handle unknown errors
+		toast.error("An unknown error occurred.", {
 			position: "top-center",
 			autoClose: 5000,
 			hideProgressBar: true,
@@ -53,8 +76,24 @@ export function handleAuthErrors(error: AxiosError<TErrorResponse>) {
 			draggable: true,
 			progress: undefined,
 			theme: "colored",
-		}); */
-		console.error(JSON.stringify(error));
-		return error;
+		});
+	}
+}
+
+export async function fetchData(
+	endpoint: string,
+	options?: RequestInit
+): Promise<any> {
+	try {
+		const response = await fetch(endpoint, options);
+
+		if (!response.ok) {
+			throw response; // Throw the Response object for error handling
+		}
+
+		return await response.json(); // Parse and return the JSON data
+	} catch (error) {
+		await handleAuthErrors(error); // Handle errors in the catch block
+		throw error; // Rethrow the error for further debugging if necessary
 	}
 }
