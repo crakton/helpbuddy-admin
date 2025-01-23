@@ -75,7 +75,6 @@ const DashboardPage: FC<pageProps> = ({}) => {
 			name: "Canceled",
 			value: canceledStats?.percentage,
 		},
-		// Add more data...
 	];
 	const cards = useSelector((state: RootState) => state.dashboard.cards);
 	const topProviders = useSelector(
@@ -227,4 +226,5 @@ const DashboardPage: FC<pageProps> = ({}) => {
 	);
 };
 
-export default withAuth(DashboardPage);
+// export default withAuth(DashboardPage);
+export default DashboardPage;

@@ -18,10 +18,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { imgs } from "@/constants/images";
 import { FaUser } from "react-icons/fa";
-import { BsFillChatLeftTextFill, BsHeartFill } from "react-icons/bs";
 import { ItemPicker } from "@/lib/utils/ItemPicker";
 import { AiFillAccountBook } from "react-icons/ai";
 import Auth from "@/services/auth.service";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "@/redux/features/auth/auth_slice";
+import { RootState } from "@/redux/store";
 
 interface MainHeaderProps {
 	sideNavOpen: boolean;
@@ -30,7 +32,6 @@ interface MainHeaderProps {
 
 const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
 	const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(true);
-	const [selectedcategory, setselectedCategory] = useState("");
 
 	const router = useRouter();
 
@@ -56,11 +57,11 @@ const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
 		//       break;
 		//   }
 	}, []);
-
+	const dispatch = useDispatch();
+	const user = useSelector((state: RootState) => state.auth.userBio);
 	const handleLogOut = useCallback(() => {
-		const authApis = new Auth(router);
-		authApis.logout();
-	}, [router]);
+		dispatch(logout());
+	}, [dispatch]);
 	const [show, setShow] = useState<boolean>(true);
 	return (
 		<header className="sticky top-0 bg-gradient-to-r from-[#2a2c79] to-[#399878] mb-5 z-30">
@@ -114,7 +115,7 @@ const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
 								/>
 							</div>
 						}
-						placeholder={`Admin`}
+						placeholder={user.name ?? "Admin User"}
 						profileLinks={[
 							{
 								name: "Profile",
@@ -144,5 +145,3 @@ const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
 };
 
 export default memo(MainHeader);
-
-// images.domains" configuration is deprecated. Please use "images.remotePatterns" configuration instead.

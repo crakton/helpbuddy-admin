@@ -19,7 +19,17 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
 
 		// Render the component only if authenticated
 		if (!isAuthenticated) {
-			return <Loader size={36} />;
+			return (
+				<div
+					className="
+			w-full h-full bg-black/20 static t-0 l-0
+			"
+				>
+					<div className="self-center place-self-center">
+						<Loader className="animate-spin repeat-infinite" size={36} />
+					</div>
+				</div>
+			);
 		}
 
 		return <WrappedComponent {...props} />;
