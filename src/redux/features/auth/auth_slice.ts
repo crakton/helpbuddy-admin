@@ -1,8 +1,10 @@
+import { IUser } from "@/interfaces/user.interface";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
 	isAuthenticated: false,
-	userBio: {},
+	loading: false,
+	userBio: {} as IUser,
 };
 
 const authSlice = createSlice({
@@ -15,7 +17,7 @@ const authSlice = createSlice({
 		logout: (state) => {
 			state.isAuthenticated = false;
 		},
-		updateUserBio: (state, action: PayloadAction<{}>) => {
+		updateUserBio: (state, action: PayloadAction<IUser>) => {
 			state.userBio = action.payload;
 		},
 	},

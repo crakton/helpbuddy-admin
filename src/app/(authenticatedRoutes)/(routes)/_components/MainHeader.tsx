@@ -80,11 +80,7 @@ const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
 					)}
 					<div className="flex gap-10 items-center">
 						<div className=" flex items-center w-16 h-10">
-							<Image
-								src={imgs.afruna_logo}
-								alt="logo"
-								className="object-contain"
-							/>
+							<Image src={imgs.logo} alt="logo" className="object-contain" />
 						</div>
 					</div>
 					<p className="ml-5 font-bold text-lg text-white">Help Buddy</p>
@@ -108,7 +104,7 @@ const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
 						leftTriggerIcon={
 							<div className=" relative bg-afruna-blue/60 ring-4 ring-slate-300 w-[1.6rem] h-[1.6rem] object-contain md:w-8 md:h-8 lg:w-10 lg:h-10  rounded-full transition-all hover:scale-90 ease-in-out duration-300 overflow-hidden flex justify-center items-center">
 								<Image
-									src={imgs.afruna_2nd_logo}
+									src={imgs.user}
 									alt="Image"
 									priority
 									className=" w-full "
