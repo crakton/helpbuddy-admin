@@ -21,8 +21,6 @@ import location from "../../../../../assests/imgs/location.png";
 import star from "../../../../../assests/imgs/star.png";
 import axios, { AxiosError } from "axios";
 import { handleAuthErrors } from "@/utils/auth.util";
-import { TErrorResponse, TSuccessResponse } from "@/types/auth.types";
-import { headers } from "@/constants/http_config";
 
 type Params = {
 	params: {
@@ -50,17 +48,7 @@ const ProviderDetailPage = ({ params: { providerId } }: Params) => {
 	const [documents, setDocuments] = useState<any[]>([]);
 	const [cards, setCards] = useState<any>();
 
-	const getCardInfo = async (pid: string) => {
-		try {
-			const { data } = await axios.get<TSuccessResponse<any>>(
-				`/api/services/${pid}/cards`,
-				headers
-			);
-			setCards(data.data);
-		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
-		}
-	};
+	const getCardInfo = async (pid: string) => {};
 
 	useEffect(() => {
 		const providerApis = new Provider();
