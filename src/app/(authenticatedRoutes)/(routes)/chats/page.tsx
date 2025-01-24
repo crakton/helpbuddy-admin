@@ -5,10 +5,8 @@ import { IoSearchOutline } from "react-icons/io5";
 import { UsersList } from "@/components/UsersList";
 import EmptyState from "@/components/EmptyState";
 import { Avatar } from "@/components/Avatar";
-import ChatService from "@/services/chat.service";
 import { useSelector } from "react-redux";
 import { RootState, store } from "@/redux/store";
-import { IUserBio } from "@/types/user";
 import { setConversations } from "@/redux/features/app/chat_slice";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import { toast } from "react-toastify";
@@ -16,6 +14,8 @@ import { IoRemoveOutline } from "react-icons/io5";
 import { LoadingUser } from "../_components/LoadingUser";
 import useSearchUsers from "@/hooks/useSearchUsers";
 import useSearchConvo from "@/hooks/useSearchConvo";
+import { Models } from "appwrite";
+import chatAPI from "@/services/chat.service";
 interface pageProps {}
 
 const ChatPage: FC<pageProps> = ({}) => {
@@ -33,35 +33,31 @@ const ChatPage: FC<pageProps> = ({}) => {
 
 	const handleFetchUsers = () => {
 		setOpen(true);
-		const chatApis = new ChatService();
 		setLoadingUser(true);
-		chatApis.getUsers().finally(() => setLoadingUser(false));
+		chatAPI.getUsers().finally(() => setLoadingUser(false));
 	};
-	const [userSelected, setUserSelected] = useState<IUserBio>();
+	const [userSelected, setUserSelected] =
+		useState<Models.User<Models.Preferences>>();
 	const handleAddUserTOChat = () => {
 		if (userSelected === undefined) {
 			toast.warn("Select the person you want to chat up");
 			return;
 		}
 		const isUserInTheConvoList = userConversations.some(
-			(conversation) =>
-				conversation.alias ===
-				`${userSelected?.firstName} ${userSelected?.lastName}`
+			(conversation) => conversation.alias === userSelected?.name
 		);
 		const newUserConversation = {
 			_id: "",
-			recipients: [`${userSelected?._id}`],
+			recipients: [`${userSelected?.$id}`],
 			lastMessage: "",
-			alias: `${userSelected?.firstName} ${userSelected?.lastName}`,
-			aliasAvatar: userSelected?.avatar,
+			alias: userSelected.name,
+			aliasAvatar: userSelected?.prefs.avatar,
 			unreadMessages: 0,
 			createdAt: "",
 			updatedAt: "",
 		};
 		if (isUserInTheConvoList) {
-			toast.info(
-				`${userSelected?.firstName} ${userSelected?.lastName} is already in your chat list`
-			);
+			toast.info(`${userSelected.name} is already in your chat list`);
 			return;
 		} else {
 			store.dispatch(
@@ -80,9 +76,8 @@ const ChatPage: FC<pageProps> = ({}) => {
 		});
 
 	useEffect(() => {
-		const chatApis = new ChatService();
 		setLoadingConvo(true);
-		chatApis.getConversations().finally(() => setLoadingConvo(false));
+		chatAPI.getConversations().finally(() => setLoadingConvo(false));
 	}, []);
 
 	return (
@@ -204,35 +199,33 @@ const ChatPage: FC<pageProps> = ({}) => {
 								<LoadingUser />
 							) : (
 								searchResult
-									.filter((_) => _.blocked === false)
+									.filter((_) => _.prefs.blocked === false)
 									.map((user) => {
 										return (
 											<button
 												onClick={() => setUserSelected(user)}
-												key={user._id}
+												key={user.$id}
 												className={` ${
-													user._id === userSelected?._id
+													user.$id === userSelected?.$id
 														? "bg-slate-200"
 														: "bg-white"
 												} p-[0.7rem] w-full rounded-md flex gap-5 justify-start items-center hover:bg-slate-200`}
 											>
 												<div className="flex justify-start items-center gap-6">
 													<Avatar
-														img={user.avatar!}
-														name={`${user.firstName
-															.charAt(0)
-															.toUpperCase()} ${user.lastName
-															.charAt(0)
-															.toUpperCase()}`}
+														img={user.prefs.avatar!}
+														name={`${user.name.split(" ")[0][0]} ${
+															user.name.split(" ")[1][0]
+														}`}
 													/>
 													<div className="flex justify-start items-start flex-1 flex-col gap-1 w-full">
 														<h2 className="text-sm text-[#0C0E3B] font-semibold tracking-tight">
-															{`${user.firstName} ${user.lastName}`}
+															{user.name}
 														</h2>
 														<p className="text-xs text-[#A2A2A2] tracking-tight">
-															{user.role === "vendor"
+															{user.prefs.role === "vendor"
 																? "Product Seller"
-																: user.role === "provider"
+																: user.prefs.role === "provider"
 																? "Service Render"
 																: "Client"}
 														</p>

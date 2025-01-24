@@ -14,7 +14,6 @@ import {
 import Image from "next/image";
 import { imgs } from "@/constants/images";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { IService } from "@/interfaces/IService";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ImSpinner3 } from "react-icons/im";
@@ -24,13 +23,13 @@ import * as Switch from "@radix-ui/react-switch";
 import useSearchService from "@/hooks/useSearchService";
 
 interface ServicesTableProps {
-	data: IService[];
+	data: any[];
 }
 
 const ServicesTable: FC<ServicesTableProps> = ({}) => {
 	const [rowSelection, setRowSelection] = useState({});
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [data, setData] = useState<IService[]>([]);
+	const [data, setData] = useState<any[]>([]);
 	const services = useSelector((state: RootState) => state.service.services);
 	const loading = useSelector((state: RootState) => state.loading.loading);
 
@@ -51,7 +50,7 @@ const ServicesTable: FC<ServicesTableProps> = ({}) => {
 	//   // serviceApis.getServices();
 	// };
 
-	const columns = useMemo<ColumnDef<IService>[]>(
+	const columns = useMemo<ColumnDef<any>[]>(
 		() => [
 			{
 				accessorKey: "id",

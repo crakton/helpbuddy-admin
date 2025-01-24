@@ -24,7 +24,6 @@ import { imgs } from "@/constants/images";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { RootState, store } from "@/redux/store";
-import { IServiceCategory } from "@/interfaces/IService";
 import { ImSpinner3 } from "react-icons/im";
 import { IoRemoveOutline } from "react-icons/io5";
 import { FaTimes } from "react-icons/fa";
@@ -39,16 +38,16 @@ import { MdEditSquare } from "react-icons/md";
 
 const CategoryTable = () => {
 	const [rowSelection, setRowSelection] = useState({});
-	const [data, setData] = useState<IServiceCategory[]>([]);
+	const [data, setData] = useState<any[]>([]);
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const categories = useSelector(
 		(state: RootState) => state.service.serviceCategories
 	);
 	const loading = useSelector((state: RootState) => state.loading.loading);
 
-	const assignUniqueIds = (data: IServiceCategory[]): IServiceCategory[] => {
+	const assignUniqueIds = (data: any[]): any[] => {
 		// Create a new array to store the updated data
-		const updatedData: IServiceCategory[] = [];
+		const updatedData: any[] = [];
 
 		// Assign unique IDs to each data object
 		let uniqueId = 1;
@@ -84,7 +83,7 @@ const CategoryTable = () => {
 		setData(updatedDataWithIds);
 	}, [categories]);
 
-	const columns = useMemo<ColumnDef<IServiceCategory>[]>(
+	const columns = useMemo<ColumnDef<any>[]>(
 		() => [
 			{
 				accessorKey: "id",
@@ -113,7 +112,7 @@ const CategoryTable = () => {
 									fill
 								/>
 							) : (
-								<Image src={imgs.afruna_logo} alt="Your image" fill />
+								<Image src={imgs.user} alt="Your image" fill />
 							)}
 						</div>
 						<span className=" text-slate-600 text-xs">{row.original.name}</span>

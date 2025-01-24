@@ -1,22 +1,6 @@
-import { headers } from "@/constants/http_config";
-import {
-	IDeleteCategory,
-	IService,
-	IServiceCategory,
-	IServiceSubCategory,
-} from "@/interfaces/IService";
-import { setLoading } from "@/redux/features/app/loading_slice";
-import {
-	createService,
-	setCategories,
-	setServices,
-} from "@/redux/features/app/service_slice";
 import { setTotalPages } from "@/redux/features/app/util_slice";
 import { TStore, store } from "@/redux/store";
-import { TErrorResponse, TSuccessResponse } from "@/types/auth.types";
-import { T_loading_provider } from "@/types/loader.types";
 import { handleAuthErrors } from "@/utils/auth.util";
-import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
 
 export default class Service {
@@ -29,77 +13,73 @@ export default class Service {
 	async getServices(page?: number) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		} finally {
-			store.dispatch(setLoading(false));
 		}
 	}
 
 	async getCategories(page?: number) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		} finally {
-			store.dispatch(setLoading(false));
 		}
 	}
 
 	async verifyService(serviceId: string) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 
 	async blockService(serviceId: string) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 
 	async getCategoriesforCreation() {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 
 	async deleteCategory(_id: string) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 
 	async getSubCategories(categoryId: string) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 
 	async createCategory(category: any) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		} finally {
-			store.dispatch(setLoading(false));
 		}
 	}
 	async editCategory(payload: any, id: string) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		} finally {
-			store.dispatch(setLoading(false));
 		}
 	}
 
-	async creatService(payload: any, loading_opt: T_loading_provider) {
+	async creatService(payload: any, loading_opt: any) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		} finally {
 		}
 	}

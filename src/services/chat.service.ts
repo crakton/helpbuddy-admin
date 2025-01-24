@@ -1,20 +1,6 @@
-import axios, { AxiosError } from "axios";
 import { TStore, store } from "../redux/store";
-import { TErrorResponse, TSuccessResponse } from "../types/auth.types";
-import { headers } from "../constants/http_config";
-import {
-	setConversations,
-	setMessages,
-	setUsers,
-} from "../redux/features/app/chat_slice";
 import { handleAuthErrors } from "../utils/auth.util";
-import {
-	IConversation,
-	IMessage,
-	ISendingMessage,
-	IUserBio,
-} from "@/types/user";
-export default class ChatService {
+class ChatService {
 	private store: TStore;
 
 	constructor() {
@@ -24,27 +10,31 @@ export default class ChatService {
 	async getConversations() {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 	async sendingMessage(payload: { to: string; message: string }) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 
 	async getMessages(conversationId: string) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 
 	async getUsers() {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 }
+
+const chatAPI = new ChatService();
+
+export default chatAPI;

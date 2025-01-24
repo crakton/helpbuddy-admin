@@ -34,10 +34,10 @@ const CustomerDetailPage = ({ params: { customerId } }: Params) => {
 
 	const customers = useSelector((state: RootState) => state.customer.customers);
 	const customer = customers.filter(
-		(customer) => customer._id === customerId
+		(customer) => customer.$id === customerId
 	)[0];
 
-	const createdAtDate = new Date(customer?.createdAt);
+	const createdAtDate = new Date(customer?.$createdAt);
 	const year = createdAtDate.getFullYear();
 	const day = createdAtDate.getDate();
 	const monthIndex = createdAtDate.getMonth(); // Months are zero-indexed
@@ -58,37 +58,35 @@ const CustomerDetailPage = ({ params: { customerId } }: Params) => {
 				<>
 					<div className="flex flex-col justify-start gap-2 px-4 md:px-10 xl:pr-32 w-full">
 						<div className="w-[6rem] h-[6rem] overflow-hidden relative rounded-full">
-							{customer?.avatar ? (
+							{customer?.prefs.avatar ? (
 								<Image
 									src={
-										customer.avatar.includes("https://")
-											? customer.avatar
-											: `https://${customer.avatar}`
+										customer.prefs.avatar.includes("https://")
+											? customer.prefs.avatar
+											: `https://${customer.prefs.avatar}`
 									}
 									alt="provider"
 									priority
 									fill
 								/>
 							) : (
-								<div className=" w-full h-full bg-slate-300 flex justify-center items-center text-sm">{`${customer?.firstName
-									.charAt(0)
-									.toUpperCase()} ${customer?.lastName
-									.charAt(0)
-									.toUpperCase()}`}</div>
+								<div className=" w-full h-full bg-slate-300 flex justify-center items-center text-sm">{`${
+									customer.name.split(" ")[0][0]
+								} ${customer.name.split(" ")[1][0]}`}</div>
 							)}
 						</div>
 						<div className="flex flex-col sm:flex-row sm:justify-between items-start gap-4 w-full">
 							<div className="flex flex-col gap-2 text-[#7C7C7C] text-xs font-semibold">
-								<h2 className="text-lg text-afruna-blue">{`${customer?.firstName} ${customer?.lastName}`}</h2>
+								<h2 className="text-lg text-afruna-blue">{customer.name}</h2>
 								<span className=" ">
 									Joined since {`${day} ${month}, ${year}`}
 								</span>
 								{/* state,  */}
-								<span className=" ">{customer?.country}</span>
+								<span className=" ">{customer?.prefs.country}</span>
 								<span className=" ">{customer?.email}</span>
 								<div className="flex flex-col ">
 									<span className="text-sm text-black">
-										{customer?.following?.length}
+										{customer?.prefs.following?.length}
 									</span>
 									<p className="">Following</p>
 								</div>
@@ -98,17 +96,11 @@ const CustomerDetailPage = ({ params: { customerId } }: Params) => {
 					<div className="flex justify-start px-4 md:px-10 xl:pr-32 ">
 						<div className="flex justify-start items-start gap-2">
 							<div className="border w-[13rem] py-7 pl-7 border-[#D5D5E6] rounded-xl bg-white flex flex-col gap-2">
-								<span className="text-sm font-bold">
-									#{customerCard?.totalSpent}
-								</span>
+								<span className="text-sm font-bold">0</span>
 								<span className="text-sm font-bold">Total spent</span>
 							</div>
 							<div className="border w-[13rem] py-7 pl-7 border-[#D5D5E6] rounded-xl bg-white flex flex-col gap-2">
-								<span className="text-sm font-bold">
-									{customer?.bookings <= 9
-										? `0${customer?.bookings}`
-										: customer?.bookings}
-								</span>
+								<span className="text-sm font-bold">0</span>
 								<span className="text-sm font-bold">Total booked</span>
 							</div>
 						</div>

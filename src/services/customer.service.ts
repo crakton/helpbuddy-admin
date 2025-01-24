@@ -1,18 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { TStore, store } from "../redux/store";
-import { TErrorResponse, TSuccessResponse } from "../types/auth.types";
-import { headers } from "../constants/http_config";
 import { handleAuthErrors } from "../utils/auth.util";
-import { ICustomerBio, ICustomerCard } from "@/types/customer";
-import {
-	setCustomer,
-	setCustomerBookings,
-	setCustomerCard,
-	setCustomers,
-} from "@/redux/features/app/customer_slice";
 import { setLoading } from "@/redux/features/app/loading_slice";
-import { T_Bookings } from "@/types/bookings";
-import { setTotalPages } from "@/redux/features/app/util_slice";
 
 export default class Customers {
 	private store: TStore;
@@ -30,13 +19,13 @@ export default class Customers {
 	async getCustomersCard(customerId: string) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		}
 	}
 	async getCustomerBookings(customerId: string) {
 		try {
 		} catch (error) {
-			handleAuthErrors(error as AxiosError<TErrorResponse>);
+			handleAuthErrors(error);
 		} finally {
 			store.dispatch(setLoading(false));
 		}

@@ -1,6 +1,7 @@
 "use client";
 
 import { RootState } from "@/redux/store";
+import chatAPI from "@/services/chat.service";
 import ChatService from "@/services/chat.service";
 import { FC } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -22,14 +23,12 @@ export const CoversationFooter: FC<CoversationFooterProps> = ({}) => {
 		formState: { isValid },
 	} = useForm<MessageInput>();
 
-	const chatApis = new ChatService();
-
 	const userTOChatId = useSelector(
 		(state: RootState) => state.chat.userTOChatId
 	);
 	const onSubmit: SubmitHandler<MessageInput> = (data) => {
 		if (isValid && userTOChatId) {
-			chatApis
+			chatAPI
 				.sendingMessage({
 					to: userTOChatId,
 					message: data.message,

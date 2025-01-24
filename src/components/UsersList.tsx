@@ -2,7 +2,6 @@
 
 import { FC, useEffect } from "react";
 import { Avatar } from "./Avatar";
-import { IConversation } from "@/types/user";
 import { useRouter } from "next/navigation";
 import { RootState, store } from "@/redux/store";
 import {
@@ -14,9 +13,10 @@ import {
 import ChatService from "@/services/chat.service";
 import { useSelector } from "react-redux";
 import { setLoading } from "@/redux/features/app/loading_slice";
+import chatAPI from "@/services/chat.service";
 
 interface UsersListProps {
-	user: IConversation;
+	user: any;
 }
 
 export const UsersList: FC<UsersListProps> = ({ user }) => {
@@ -30,12 +30,11 @@ export const UsersList: FC<UsersListProps> = ({ user }) => {
 	const conversationId = user._id;
 
 	useEffect(() => {
-		const chatApis = new ChatService();
-		chatApis.getUsers();
+		chatAPI.getUsers();
 	}, []);
 
 	const usersData = useSelector((state: RootState) => state.chat.users);
-	const singleUser = usersData.filter((user) => user._id === userTOChatId)[0];
+	const singleUser = usersData.filter((user) => user.$id === userTOChatId)[0];
 
 	const handleSelectedChat = () => {
 		store.dispatch(setActiveHeaderInfo(user));
@@ -46,10 +45,9 @@ export const UsersList: FC<UsersListProps> = ({ user }) => {
 			router.push(`/chat/${userTOChatId}`);
 			store.dispatch(setLoading(false));
 		} else {
-			const chatApis = new ChatService();
-			chatApis
+			chatAPI
 				.getMessages(conversationId)
-				.then((data) => {
+				.then((data: any) => {
 					if (data) {
 						store.dispatch(setMessages(data));
 					}
@@ -77,7 +75,7 @@ export const UsersList: FC<UsersListProps> = ({ user }) => {
 			>
 				<div className="flex justify-start items-center gap-4 w-full">
 					<Avatar
-						img={singleUser?.avatar!}
+						img={singleUser?.prefs.avatar!}
 						active={true}
 						name={`${firstWord}  ${secondWord}`}
 					/>

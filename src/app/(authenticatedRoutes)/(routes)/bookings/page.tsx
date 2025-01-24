@@ -14,7 +14,6 @@ import {
 	setInProgreessBookings,
 	setPendingBookings,
 } from "@/redux/features/app/booking_slice";
-import { T_Bookings } from "@/types/bookings";
 import PendingBookingsTable from "@/components/PendingBookingsTable";
 import CanceledBookingsTable from "@/components/CanceledBookingsTable";
 import CompletedBookingsTable from "@/components/CompletedBookingsTable";
@@ -63,9 +62,7 @@ const BookingsPage: FC<pageProps> = ({}) => {
 				store.dispatch(setStatus("pending"));
 				store.dispatch(
 					setPendingBookings(
-						bookings.filter(
-							(booking: T_Bookings) => booking.status === "pending"
-						)
+						bookings.filter((booking: any) => booking.status === "pending")
 					)
 				);
 				break;
@@ -73,9 +70,7 @@ const BookingsPage: FC<pageProps> = ({}) => {
 				store.dispatch(setStatus("processing"));
 				store.dispatch(
 					setInProgreessBookings(
-						bookings.filter(
-							(booking: T_Bookings) => booking.status === "in progress"
-						)
+						bookings.filter((booking: any) => booking.status === "in progress")
 					)
 				);
 				break;
@@ -83,9 +78,7 @@ const BookingsPage: FC<pageProps> = ({}) => {
 				store.dispatch(setStatus("completed"));
 				store.dispatch(
 					setCompletedBookings(
-						bookings.filter(
-							(booking: T_Bookings) => booking.status === "completed"
-						)
+						bookings.filter((booking: any) => booking.status === "completed")
 					)
 				);
 				break;
@@ -93,9 +86,7 @@ const BookingsPage: FC<pageProps> = ({}) => {
 				store.dispatch(setStatus("canceled"));
 				store.dispatch(
 					setCanceledBookings(
-						bookings.filter(
-							(booking: T_Bookings) => booking.status === "canceled"
-						)
+						bookings.filter((booking: any) => booking.status === "canceled")
 					)
 				);
 				break;

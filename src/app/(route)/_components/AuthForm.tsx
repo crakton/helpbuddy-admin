@@ -6,15 +6,20 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Loader2 } from "lucide-react";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Auth from "@/services/auth.service";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from "react-redux";
-import { EUserType } from "@/constants/enums";
-import { login, updateUserBio } from "@/redux/features/auth/auth_slice";
-
-interface AuthFormProps {}
+import {
+	login,
+	setSession,
+	updateUserBio,
+} from "@/redux/features/auth/auth_slice";
+import { Models } from "appwrite";
+import { IUser } from "@/interfaces/user.interface";
+import authAPI from "@/services/auth.service";
+import { toast } from "react-toastify";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -22,7 +27,7 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-const AuthForm: FC<AuthFormProps> = ({}) => {
+const AuthForm: FC<{}> = ({}) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const toggleshowPassword = useCallback(
@@ -39,14 +44,26 @@ const AuthForm: FC<AuthFormProps> = ({}) => {
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
 
 	const onSubmit: SubmitHandler<FormData> = useCallback(
-		async (data) => {
-			const authApis = new Auth();
-			const user = await authApis.logIn(data);
+		(data, e) => {
+			e?.preventDefault();
 
-			dispatch(login());
-			dispatch(updateUserBio(user));
-
-			router.replace("/dashboard");
+			setIsLoading(true);
+			authAPI
+				.login(data.email, data.password)
+				.then(({ user, session }) => {
+					console.log(user);
+					dispatch(login());
+					dispatch(setSession(session));
+					dispatch(updateUserBio(user));
+					if (user.prefs.role === "admin" || user.prefs.role === "provider")
+						router.replace("/dashboard");
+					toast.warn("You are not authorized to access this page");
+					redirect("/");
+				})
+				.catch((error: any) => {})
+				.finally(() => {
+					setIsLoading(false);
+				});
 		},
 		[dispatch, router]
 	);

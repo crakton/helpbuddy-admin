@@ -12,6 +12,8 @@ export async function handleAuthErrors(error: unknown): Promise<void> {
 					autoClose: 2000,
 					theme: "colored",
 				});
+				// Use router.push() instead of redirect()
+				// You'll need to import useRouter from next/navigation or pass router as a parameter
 				redirect("/");
 
 			case 403: // Forbidden

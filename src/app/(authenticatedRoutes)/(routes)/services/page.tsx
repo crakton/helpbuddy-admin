@@ -2,7 +2,6 @@
 
 import ItemPicker from "@/components/ItemPicker";
 import ServicesTable from "@/components/ServicesTable";
-import { IService } from "@/interfaces/IService";
 import {
 	setBlockedServices,
 	setPendingServices,
@@ -65,7 +64,7 @@ const Page: FC<pageProps> = ({}) => {
 				store.dispatch(
 					setPendingServices(
 						services.filter(
-							(service: IService) =>
+							(service: any) =>
 								service.verified === false ||
 								service.verified === undefined ||
 								service.blocked === true
@@ -78,7 +77,7 @@ const Page: FC<pageProps> = ({}) => {
 				store.dispatch(setStatus("blocked"));
 				store.dispatch(
 					setBlockedServices(
-						services.filter((service: IService) => service.blocked === true)
+						services.filter((service: any) => service.blocked === true)
 					)
 				);
 				break;
@@ -87,7 +86,7 @@ const Page: FC<pageProps> = ({}) => {
 				store.dispatch(
 					setVerifiedServices(
 						services.filter(
-							(service: IService) =>
+							(service: any) =>
 								service.verified === true ||
 								(service.blocked === false && service.blocked === undefined)
 						)
@@ -99,7 +98,7 @@ const Page: FC<pageProps> = ({}) => {
 				store.dispatch(
 					setUnpublishedServices(
 						services.filter(
-							(service: IService) =>
+							(service: any) =>
 								service.publish === false || service.publish === undefined
 						)
 					)

@@ -1,6 +1,5 @@
 "use client";
 
-import { ICustomerBio } from "@/types/customer";
 import useSearchCustomer from "@/hooks/useSearchCustomer";
 import { RootState } from "@/redux/store";
 import Customers from "@/services/customer.service";
@@ -9,6 +8,7 @@ import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import CustomersTable from "@/components/CustomersTable";
 import Pagination from "../_components/Pagination";
+import { Models } from "appwrite";
 
 interface CustomersPageProps {}
 
@@ -30,7 +30,7 @@ const CustomersPage: FC<CustomersPageProps> = ({}) => {
 	}, [page]);
 	const customers = useSelector((state: RootState) => state.customer.customers);
 	const { searchCustomerInput, searchCustomerResult, setSearchCustomerInput } =
-		useSearchCustomer<ICustomerBio>({ data: customers });
+		useSearchCustomer<Models.User<Models.Preferences>>({ data: customers });
 
 	return (
 		<section className="flex flex-col gap-6 pb-8 ">

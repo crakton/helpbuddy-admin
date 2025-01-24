@@ -7,7 +7,9 @@ import { useRoute } from "@/hooks/useRoute";
 import Link from "next/link";
 import { FC, useCallback, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import Auth from "@/services/auth.service";
+import authAPI from "@/services/auth.service";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/features/auth/auth_slice";
 
 interface SideBarProps {
 	sideNavOpen: boolean;
@@ -22,11 +24,15 @@ const SideBar: FC<SideBarProps> = ({ sideNavOpen, setSideNavOpen }) => {
 	const [showSubNav, setShowSubNav] = useState<boolean>(false);
 	const toggleAccount = useCallback(() => setShow((prev) => !prev), []);
 	const toggleSubNav = useCallback(() => setShowSubNav((prev) => !prev), []);
+
+	const dispatch = useDispatch();
 	const router = useRouter();
 	const handleLogOut = useCallback(() => {
-		const authApis = new Auth();
-		authApis.logout();
-	}, []);
+		authAPI.logout().then(() => {
+			dispatch(logout());
+			router.replace("/");
+		});
+	}, [dispatch, router]);
 
 	return (
 		<>

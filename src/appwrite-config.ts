@@ -2,8 +2,8 @@ import { Account, Client, Databases, Storage } from "appwrite";
 
 const client = new Client();
 client
-	.setEndpoint(process.env.APPWRITE_ENDPOINT || "")
-	.setProject(process.env.APPWRITE_PROJECT_ID || "");
+	.setProject(process.env.APPWRITE_PROJECT_ID || "")
+	.setEndpointRealtime(process.env.APPWRITE_ENDPOINT || "");
 
 // Initialize Appwrite Account
 const account = new Account(client);

@@ -14,7 +14,6 @@ import {
 import Image from "next/image";
 import { imgs } from "@/constants/images";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
-import { IService } from "@/interfaces/IService";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ImSpinner3 } from "react-icons/im";
@@ -27,16 +26,13 @@ interface ServicesTableProps {}
 const PendingServiceTable: FC<ServicesTableProps> = () => {
 	const [rowSelection, setRowSelection] = useState({});
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [data, setData] = useState<IService[]>([]);
 	const services = useSelector(
 		(state: RootState) => state.service.pendingServices
 	);
 	const loading = useSelector((state: RootState) => state.loading.loading);
-	useEffect(() => {
-		setData(services);
-	}, [services]);
+	useEffect(() => {}, [services]);
 
-	const columns = useMemo<ColumnDef<IService>[]>(
+	const columns = useMemo<ColumnDef<any>[]>( // change when data is available
 		() => [
 			{
 				accessorKey: "id",
@@ -291,7 +287,7 @@ const PendingServiceTable: FC<ServicesTableProps> = () => {
 	);
 
 	const table = useReactTable({
-		data,
+		data: [], // change this when data is available
 		columns,
 		state: {
 			rowSelection,

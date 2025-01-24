@@ -19,11 +19,10 @@ import Image from "next/image";
 import { imgs } from "@/constants/images";
 import { FaUser } from "react-icons/fa";
 import { ItemPicker } from "@/lib/utils/ItemPicker";
-import { AiFillAccountBook } from "react-icons/ai";
-import Auth from "@/services/auth.service";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "@/redux/features/auth/auth_slice";
+import { logout, setSession } from "@/redux/features/auth/auth_slice";
 import { RootState } from "@/redux/store";
+import authAPI from "@/services/auth.service";
 
 interface MainHeaderProps {
 	sideNavOpen: boolean;
@@ -60,8 +59,11 @@ const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
 	const dispatch = useDispatch();
 	const user = useSelector((state: RootState) => state.auth.userBio);
 	const handleLogOut = useCallback(() => {
-		dispatch(logout());
-	}, [dispatch]);
+		authAPI.logout().then(() => {
+			dispatch(logout());
+			router.replace("/");
+		});
+	}, [dispatch, router]);
 	const [show, setShow] = useState<boolean>(true);
 	return (
 		<header className="sticky top-0 bg-gradient-to-r from-[#2a2c79] to-[#399878] mb-5 z-30">

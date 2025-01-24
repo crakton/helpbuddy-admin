@@ -1,6 +1,6 @@
 "use client";
 
-import { FC, Suspense, useEffect, useState } from "react";
+import { FC } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { UsersList } from "@/components/UsersList";
 import { CurrentUserHeader } from "@/components/CurrentUserHeader";
@@ -9,7 +9,6 @@ import { CoversationFooter } from "@/components/CoversationFooter";
 import EmptyState from "@/components/EmptyState";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import ChatService from "@/services/chat.service";
 import { ImSpinner3 } from "react-icons/im";
 import useSearchConvo from "@/hooks/useSearchConvo";
 
@@ -34,13 +33,8 @@ const ChatCovoPage: FC<pageProps> = ({ params: { userTOChatId } }) => {
 			data: userConversations,
 		});
 
-	useEffect(() => {
-		const chatApis = new ChatService();
-		chatApis.getUsers();
-	}, []);
-
 	const usersData = useSelector((state: RootState) => state.chat.users);
-	const singleUser = usersData.filter((user) => user._id === userTOChatId)[0];
+	const singleUser = usersData.filter((user) => user.$id === userTOChatId)[0];
 
 	return (
 		<section className="flex flex-col gap-6 sm:gap-4 ">
@@ -92,7 +86,7 @@ const ChatCovoPage: FC<pageProps> = ({ params: { userTOChatId } }) => {
 						<div className="h-[4.5rem] px-2 sm:px-4 border-b border-[#D5D5E6] flex justify-center items-center">
 							<CurrentUserHeader
 								name={activeSelectedUser?.alias}
-								img={singleUser?.avatar!}
+								img={singleUser?.prefs.avatar!}
 								active={true}
 							/>
 						</div>
