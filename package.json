@@ -24,6 +24,7 @@
     "appwrite": "^16.1.0",
     "axios": "^1.6.1",
     "class-variance-authority": "^0.7.0",
+    "classnames": "^2.5.1",
     "clsx": "^2.0.0",
     "dotenv": "^16.4.7",
     "js-cookie": "^3.0.5",
