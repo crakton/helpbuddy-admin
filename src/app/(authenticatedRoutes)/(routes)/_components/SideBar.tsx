@@ -8,8 +8,8 @@ import Link from "next/link";
 import { FC, useCallback, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import authAPI from "@/services/auth.service";
-import { useDispatch } from "react-redux";
-import { logout } from "@/redux/features/auth/auth_slice";
+import { useAppDispatch } from "@/lib/store";
+import { logout } from "@/features/authSlice";
 
 interface SideBarProps {
 	sideNavOpen: boolean;
@@ -25,7 +25,8 @@ const SideBar: FC<SideBarProps> = ({ sideNavOpen, setSideNavOpen }) => {
 	const toggleAccount = useCallback(() => setShow((prev) => !prev), []);
 	const toggleSubNav = useCallback(() => setShowSubNav((prev) => !prev), []);
 
-	const dispatch = useDispatch();
+	const dispatch = useAppDispatch();
+
 	const router = useRouter();
 	const handleLogOut = useCallback(() => {
 		authAPI.logout().then(() => {

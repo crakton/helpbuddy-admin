@@ -18,11 +18,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { imgs } from "@/constants/images";
 import { FaUser } from "react-icons/fa";
-import { ItemPicker } from "@/lib/utils/ItemPicker";
+import { ItemPicker } from "@/lib/ItemPicker";
 import { useDispatch, useSelector } from "react-redux";
-import { logout, setSession } from "@/redux/features/auth/auth_slice";
-import { RootState } from "@/redux/store";
 import authAPI from "@/services/auth.service";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import { logout } from "@/features/authSlice";
 
 interface MainHeaderProps {
 	sideNavOpen: boolean;
@@ -30,41 +30,16 @@ interface MainHeaderProps {
 }
 
 const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
-	const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState(true);
-
 	const router = useRouter();
-
-	const toggleCategoryMenu = useCallback(
-		() => setIsCategoryMenuOpen(!isCategoryMenuOpen),
-		[isCategoryMenuOpen]
-	);
-
-	const [isShow, setIsShow] = useState<boolean>(false);
-
-	const toggleCategoriesMenu = useCallback(
-		() => setIsShow((prev) => !prev),
-		[]
-	);
-
-	const handleHelpSelection = useCallback((value: string) => {
-		//   switch (value) {
-		//     case HELP[0]:
-		//       router.push("/faq");
-		//       break;
-		//     default:
-		//       router.push("contact");
-		//       break;
-		//   }
-	}, []);
-	const dispatch = useDispatch();
-	const user = useSelector((state: RootState) => state.auth.userBio);
+	const { user } = useAppSelector((state) => state.auth);
+	const dispatch = useAppDispatch();
 	const handleLogOut = useCallback(() => {
 		authAPI.logout().then(() => {
 			dispatch(logout());
 			router.replace("/");
 		});
 	}, [dispatch, router]);
-	const [show, setShow] = useState<boolean>(true);
+	// const [show, setShow] = useState<boolean>(true);
 	return (
 		<header className="sticky top-0 bg-gradient-to-r from-[#2a2c79] to-[#399878] mb-5 z-30">
 			<nav className="max-w-[97%] md:max-w-[95%] w-full flex justify-between items-center mx-auto p-6 lg:max-w-[90%]">
@@ -113,7 +88,7 @@ const MainHeader: FC<MainHeaderProps> = ({ sideNavOpen, setSideNavOpen }) => {
 								/>
 							</div>
 						}
-						placeholder={user.name ?? "Admin User"}
+						placeholder={user?.name ?? "Admin User"}
 						profileLinks={[
 							{
 								name: "Profile",

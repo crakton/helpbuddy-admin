@@ -7,19 +7,17 @@ import { Loader2 } from "lucide-react";
 import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 import { redirect, useRouter } from "next/navigation";
-import Auth from "@/services/auth.service";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDispatch } from "react-redux";
-import {
-	login,
-	setSession,
-	updateUserBio,
-} from "@/redux/features/auth/auth_slice";
-import { Models } from "appwrite";
-import { IUser } from "@/interfaces/user.interface";
 import authAPI from "@/services/auth.service";
-import { toast } from "react-toastify";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import {
+	loginFailure,
+	loginStart,
+	loginSuccess,
+	setSession,
+} from "@/features/authSlice";
+import { useToast } from "react-toast-plus";
 
 const schema = z.object({
 	email: z.string().email(),
@@ -27,45 +25,47 @@ const schema = z.object({
 });
 type FormData = z.infer<typeof schema>;
 
-const AuthForm: FC<{}> = ({}) => {
-	const [isLoading, setIsLoading] = useState(false);
+const AuthForm = () => {
+	const { addToast: toast } = useToast();
+	const { loading } = useAppSelector((state) => state.auth);
 	const [showPassword, setShowPassword] = useState<boolean>(false);
 	const toggleshowPassword = useCallback(
 		() => setShowPassword((prev) => !prev),
 		[]
 	);
 	const router = useRouter();
-	const dispatch = useDispatch();
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<FormData>({ resolver: zodResolver(schema) });
-
+	const dispatch = useAppDispatch();
 	const onSubmit: SubmitHandler<FormData> = useCallback(
 		(data, e) => {
 			e?.preventDefault();
 
-			setIsLoading(true);
+			dispatch(loginStart());
 			authAPI
 				.login(data.email, data.password)
-				.then(({ user, session }) => {
-					console.log(user);
-					dispatch(login());
-					dispatch(setSession(session));
-					dispatch(updateUserBio(user));
-					if (user.prefs.role === "admin" || user.prefs.role === "provider")
+				.then(async ({ user, session }) => {
+					if (user.prefs.role === "admin" || user.prefs.role === "provider") {
+						// dipatch session
+						dispatch(setSession(session));
+						// dispatch isAuthenticated
+						dispatch(loginSuccess(user));
+						// dispatch user
+						toast.success("Login successful");
 						router.replace("/dashboard");
-					toast.warn("You are not authorized to access this page");
+					}
+					toast.warning("You are not authorized to access this page");
 					redirect("/");
 				})
-				.catch((error: any) => {})
-				.finally(() => {
-					setIsLoading(false);
+				.catch((error: any) => {
+					dispatch(loginFailure(error));
 				});
 		},
-		[dispatch, router]
+		[router, dispatch]
 	);
 	const [rememberMe, setRememberMe] = useState(false);
 	const handleRememberMe: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -104,7 +104,7 @@ const AuthForm: FC<{}> = ({}) => {
 									type={"email"}
 									placeholder={"don@gmail.com"}
 									autoComplete={"email"}
-									disabled={isLoading}
+									disabled={loading}
 									{...register("email", { required: true })}
 									className={`form-input px-2.5 py-1.5 w-full border-[2px] focus-within:border-[2px] focus-within:border-[#FFDBB6] 
               focus-within:shadow-md text-sm font-medium rounded-md placeholder:text-gray-400 
@@ -134,14 +134,14 @@ const AuthForm: FC<{}> = ({}) => {
 								className={`flex mt-1 justify-between items-center border-[2px] focus-within:border-[2px] focus-within:border-[#FFDBB6] focus-within:shadow-md w-full text-sm
                   font-medium rounded-md placeholder:text-gray-400 focus-visible:shadow-md 
                   transition duration-300 sm:text-sm sm:leading-6 
-                  ${isLoading && "opacity-50 cursor-default"}`}
+                  ${loading && "opacity-50 cursor-default"}`}
 							>
 								<input
 									id={"password"}
 									type={showPassword ? "text" : "password"}
 									placeholder={!showPassword ? "*******" : "password"}
 									autoComplete={"password"}
-									disabled={isLoading}
+									disabled={loading}
 									{...register("password", { required: true })}
 									className="w-full bg-transparent px-2.5 py-1.5"
 								/>
@@ -197,13 +197,27 @@ const AuthForm: FC<{}> = ({}) => {
 						// !agreed && "cursor-not-allowed"
 						variant={"primary"}
 						// fullWidth
-						// disabled={!agreed && opt.isLoading}
+						// disabled={!agreed && opt.loading}
 						className={`h-10 font-semibold text-white rounded-md my-6 w-full`}
 					>
-						{isLoading ? (
+						{loading ? (
 							<Loader2 className=" h-6 w-6 animate-spin text-white" />
 						) : (
 							"Log in"
+						)}
+					</Button>
+					<Button
+						type="button"
+						variant={"secondary"}
+						onClick={() => {
+							authAPI.logout();
+						}}
+						className={`h-10 font-semibold text-white rounded-md my-6 w-full`}
+					>
+						{loading ? (
+							<Loader2 className=" h-6 w-6 animate-spin text-white" />
+						) : (
+							"Logout"
 						)}
 					</Button>
 				</section>

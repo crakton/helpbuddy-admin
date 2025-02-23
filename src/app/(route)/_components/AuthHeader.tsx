@@ -6,7 +6,7 @@ import Link from "next/link";
 import { MdHelp, MdSupportAgent } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { imgs } from "@/constants/images";
-import { ItemPicker } from "@/lib/utils/ItemPicker";
+import { ItemPicker } from "@/lib/ItemPicker";
 
 interface AuthHeaderProps {}
 
