@@ -1,5 +1,5 @@
 import { TStore, store } from "@/redux/store";
-import { handleAuthErrors } from "@/utils/auth.util";
+import { handleAuthErrors } from "@/lib/auth.util";
 export default class Transactions {
 	private store: TStore;
 

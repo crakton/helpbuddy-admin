@@ -1,15 +1,9 @@
 import appwrite from "@/appwrite-config";
-import { store, TStore } from "@/redux/store";
-import { handleAuthErrors } from "@/utils/auth.util";
+import { handleAuthErrors } from "@/lib/auth.util";
 import { ID } from "appwrite";
 import { toast } from "react-toastify";
 
 class Auth {
-	private store: TStore;
-
-	constructor() {
-		this.store = store;
-	}
 	async login(email: string, password: string) {
 		try {
 			const session = await appwrite.account.createEmailPasswordSession(
@@ -61,6 +55,22 @@ class Auth {
 			const token = await appwrite.account.createVerification(userId);
 			toast.success("Email verified successfully");
 			return token;
+		} catch (error) {
+			await handleAuthErrors(error);
+			throw error;
+		}
+	}
+	async checkSession() {
+		try {
+			const sessionToken = Object.keys(localStorage).find((key) =>
+				key.startsWith("a_session_")
+			);
+
+			if (sessionToken) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (error) {
 			await handleAuthErrors(error);
 			throw error;
