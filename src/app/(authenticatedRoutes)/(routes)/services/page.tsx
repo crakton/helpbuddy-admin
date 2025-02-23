@@ -1,29 +1,14 @@
 "use client";
 
-import ItemPicker from "@/components/ItemPicker";
-import ServicesTable from "@/components/ServicesTable";
-import {
-	setBlockedServices,
-	setPendingServices,
-	setUnpublishedServices,
-	setVerifiedServices,
-} from "@/redux/features/app/service_slice";
-import { setStatus } from "@/redux/features/app/table_status_slice";
-import { RootState, store } from "@/redux/store";
-import Service from "@/services/service.service";
-import { FC, useEffect, useMemo } from "react";
-import { IoSearchOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
-import PendingServiceTable from "../_components/PendingServiceTable";
-import BlockedServiceTable from "../_components/BlockedServiceTable";
-import VerifiedServicesTable from "../_components/VerifiedServicesTable";
-import UnPublishServicesTable from "../_components/UnPublishServicesTable";
-import useSearchService from "@/hooks/useSearchService";
-import { pages } from "next/dist/build/templates/app-page";
-import { useSearchParams } from "next/navigation";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useAppSelector, useAppDispatch } from "@/lib/store";
 import Pagination from "../_components/Pagination";
+import ServicesTable from "@/components/ServicesTable";
+import { serviceManager } from "@/services/service.service";
+import { setServices, setTotalPages } from "@/features/serviceSlice";
+import { IService } from "@/interfaces/service.interface";
 
-interface pageProps {}
 const Services_Tab = [
 	"All Services",
 	"Verified Services",
@@ -31,186 +16,145 @@ const Services_Tab = [
 	"Unpublished Services",
 	"Blocked Services",
 ];
+
 export type tableStatus =
 	| "all"
-	| "pending"
 	| "verified"
-	| "blocked"
-	| "unpublished";
+	| "pending"
+	| "unpublished"
+	| "blocked";
 
-const Page: FC<pageProps> = ({}) => {
-	const totalPages = useSelector((state: RootState) => state.util.totalPages);
-
+const Page: FC = () => {
+	const router = useRouter();
+	const dispatch = useAppDispatch();
 	const searchParams = useSearchParams();
-	let page = searchParams.get("page") as string;
-	console.log(page);
+	const [activeTab, setActiveTab] = useState<tableStatus>("all");
+	const user = useAppSelector((state) => state.auth.user);
+	const { services, loading } = useAppSelector((state) => state.services);
 
-	if (page === null) page = "1";
+	const fetchServices = useCallback(async () => {
+		const {
+			services: { documents, total },
+		} = await serviceManager.getServices();
 
-	const currentStatus = useSelector(
-		(state: RootState) => state.tableStatus.status
-	);
-	let services = useSelector((state: RootState) => state.service.services);
+		const isServiceProvider = user?.prefs.role === "provider";
+		if (isServiceProvider) {
+			const myServices = documents.filter((doc) => doc.providerId === user.$id);
 
-	const handleTabSelect = (status: tableStatus) => {
-		const serviceApis = new Service();
-		switch (status) {
-			case "all":
-				store.dispatch(setStatus("all"));
-				serviceApis.getServices();
-				break;
-			case "pending":
-				store.dispatch(setStatus("pending"));
-				store.dispatch(
-					setPendingServices(
-						services.filter(
-							(service: any) =>
-								service.verified === false ||
-								service.verified === undefined ||
-								service.blocked === true
-						)
-					)
-				);
-
-				break;
-			case "blocked":
-				store.dispatch(setStatus("blocked"));
-				store.dispatch(
-					setBlockedServices(
-						services.filter((service: any) => service.blocked === true)
-					)
-				);
-				break;
-			case "verified":
-				store.dispatch(setStatus("verified"));
-				store.dispatch(
-					setVerifiedServices(
-						services.filter(
-							(service: any) =>
-								service.verified === true ||
-								(service.blocked === false && service.blocked === undefined)
-						)
-					)
-				);
-				break;
-			case "unpublished":
-				store.dispatch(setStatus("unpublished"));
-				store.dispatch(
-					setUnpublishedServices(
-						services.filter(
-							(service: any) =>
-								service.publish === false || service.publish === undefined
-						)
-					)
-				);
-				break;
-			default:
-				break;
+			dispatch(setServices(myServices as unknown as IService[]));
+		} else {
+			dispatch(setServices(documents as unknown as IService[]));
 		}
-	};
-	const { searchInput, searchResult, setSearchInput } = useSearchService({
-		data: services,
-	});
-
-	const Component = useMemo(() => {
-		switch (currentStatus) {
-			case "pending":
-				return <PendingServiceTable />;
-			case "blocked":
-				return <BlockedServiceTable />;
-			case "verified":
-				return <VerifiedServicesTable />;
-			case "unpublished":
-				return <UnPublishServicesTable />;
-			default:
-				return <ServicesTable data={searchResult} />;
-		}
-	}, [currentStatus, searchResult]);
+	}, [dispatch, user?.$id, user?.prefs.role]);
 
 	useEffect(() => {
-		const serviceApis = new Service();
-		serviceApis.getServices(Number(page));
+		fetchServices();
+	}, [fetchServices]);
 
-		return () => {
-			store.dispatch(setStatus("all"));
-		};
-	}, [page]);
+	console.log("services: ", services);
+
+	let page = searchParams.get("page") as string;
+	if (page === null) page = "1";
+
+	// Filter services based on active tab
+	const getFilteredServices = useCallback(() => {
+		switch (activeTab) {
+			case "verified":
+				return services.filter((service) => service.isVerified);
+			case "pending":
+				return services.filter(
+					(service) =>
+						!service.isVerified &&
+						!service.isBlocked &&
+						service.status !== "draft"
+				);
+			case "unpublished":
+				return services.filter((service) => service.status === "draft");
+			case "blocked":
+				return services.filter((service) => service.isBlocked);
+			default:
+				return services;
+		}
+	}, [activeTab, services]);
+
+	const handleTabChange = useCallback(
+		(tabStatus: tableStatus) => {
+			setActiveTab(tabStatus);
+			// Reset to first page when changing tabs
+			if (page !== "1") {
+				router.push(`?page=1`);
+			}
+		},
+		[page, router]
+	);
+
+	const filteredServices = useMemo(
+		() => getFilteredServices(),
+		[getFilteredServices]
+	);
+	const filteredTotalPages = useMemo(
+		() => Math.ceil(filteredServices.length / 10),
+		[filteredServices.length]
+	);
 
 	return (
 		<section className="flex flex-col gap-7 pb-12">
 			<div className="flex justify-between items-center pl-4 lg:pr-16 lg:pl-6 bg-white w-full h-16">
 				<div className="flex items-center justify-start gap-16">
 					<h1 className="text-lg lg:pl-0 lg:text-xl leading-3 text-afruna-blue font-bold">
-						All Services
+						{Services_Tab.find((tab) =>
+							tab.toLowerCase().startsWith(activeTab)
+						)}
 					</h1>
-					{/* <fieldset className="flex items-center gap-1 px-2 border border-slate-300 rounded-md overflow-hidden">
-          <div className=" text-[#D2D2D2] flex justify-center items-center">
-                  <IoSearchOutline className="text-2xl" />
-                </div>
-                <input
-                  value={searchInput}
-                  onChange={(e) => setSearchInput(e.target.value)}
-                  type="search"
-                  placeholder="Search by name or last message..."
-                  className="w-full text-sm text-slate-500 placeholder:text-xs p-2 focus:outline-none placeholder:text-[#D2D2D2]"
-                />
-          </fieldset> */}
 				</div>
-				<div className="flex justify-end items-center gap-6">
-					{/* <fieldset className="flex">
-            <ItemPicker
-              items={["A", "B"]}
-              placeholder={"A-Z"}
-              getSelected={(val) => ''}
-              contentClassName={"p-2 bg-white text-xs"}
-              triggerClassName="px-3 py-[0.59rem] rounded min-w-[8rem] w-full"
-            />
-          </fieldset> */}
-					{/* <Link
-            href={"/create_service"}
-            className={buttonVariants({ variant: "greenbutton" })}
-          >
-            <BsPlus className="font-extrabold text-xl" /> Add Service
-          </Link> */}
-				</div>
+				<div className="flex justify-end items-center gap-6"></div>
 			</div>
+
 			<div className="flex flex-col gap-6 px-6 xl:pr-10 w-full">
 				<div className="flex flex-col gap-1 w-full">
 					<div className="flex justify-start gap-8 items-center">
-						{Services_Tab.map((item, idx) => (
-							<button
-								className={`${
-									currentStatus === item.split(" ")[0].toLowerCase() &&
-									" text-[#399878]"
-								} text-afruna-blue text-sm md:text-base font-bold relative flex flex-col `}
-								key={idx}
-								onClick={() =>
-									handleTabSelect(
-										item.split(" ")[0].toLowerCase() as tableStatus
-									)
-								}
-							>
-								{item}
-								<div
-									className={`${
-										currentStatus === item.split(" ")[0].toLowerCase() &&
-										"bg-[#399878]"
-									} w-full h-[2px] absolute -bottom-[0.35rem]`}
-								/>
-							</button>
-						))}
+						{Services_Tab.map((item, idx) => {
+							const tabStatus = item.toLowerCase().split(" ")[0] as tableStatus;
+							const isActive = activeTab === tabStatus;
+
+							return (
+								<button
+									className={`text-afruna-blue text-sm md:text-base font-bold relative flex flex-col
+                    ${isActive ? "text-afruna-blue" : "text-gray-500"}`}
+									key={idx}
+									onClick={() => handleTabChange(tabStatus)}
+								>
+									{item}
+									<div
+										className={`w-full h-[2px] absolute -bottom-[0.35rem] 
+                      ${isActive ? "bg-[#aae0ce]" : "bg-transparent"}`}
+									/>
+								</button>
+							);
+						})}
 					</div>
-					<div className="bg-[#aae0ce] w-1/2 h-[2px] " />
+					<div className="bg-[#aae0ce] w-1/2 h-[2px]" />
 				</div>
 
-				{/* {searchResult.map(ser => {
-          return(
-            <div className="text-xs">{ser.name}</div>
-          )
-        })} */}
+				{loading ? (
+					<div className="flex items-center justify-center py-8">
+						<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-afruna-blue" />
+					</div>
+				) : (
+					<>
+						<div className="flex justify-between items-center mb-4">
+							<span className="text-sm text-gray-600">
+								Showing {filteredServices.length} services
+							</span>
+						</div>
 
-				<Component.type />
-				<Pagination page={page} totalPages={totalPages} />
+						<ServicesTable services={filteredServices} />
+
+						{filteredTotalPages > 1 && (
+							<Pagination page={page} totalPages={filteredTotalPages} />
+						)}
+					</>
+				)}
 			</div>
 		</section>
 	);

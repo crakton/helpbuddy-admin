@@ -20,7 +20,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import location from "../../../../../assests/imgs/location.png";
 import star from "../../../../../assests/imgs/star.png";
 import axios, { AxiosError } from "axios";
-import { handleAuthErrors } from "@/utils/auth.util";
+import { handleAuthErrors } from "@/lib/auth.util";
 
 type Params = {
 	params: {

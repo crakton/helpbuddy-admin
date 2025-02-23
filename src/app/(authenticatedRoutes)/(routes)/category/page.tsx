@@ -1,84 +1,163 @@
 "use client";
 
-import CategoryTable from "@/components/CategoryTable";
-import ItemPicker from "@/components/ItemPicker";
-import { buttonVariants } from "@/components/ui/button";
-import { RootState } from "@/redux/store";
-import Service from "@/services/service.service";
+import { FC, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { FC, useEffect } from "react";
 import { BsPlus } from "react-icons/bs";
-import { IoSearchOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
-import Pagination from "../_components/Pagination";
+import { buttonVariants } from "@/components/ui/button";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import withAuth from "@/lib/withAuth";
+import Modal from "@/components/Modal";
+import { ServiceCategory, serviceManager } from "@/services/service.service";
+import { Models } from "appwrite";
+import EditCategoryForm from "@/components/EditCategoryForm";
+import { setCategories, setSubCategories } from "@/features/serviceSlice";
+import { COLLECTION_IDS } from "@/constants/collection_id";
+import CategoryTable from "@/components/CategoryTable";
+import { useToast } from "react-toast-plus";
 
-interface pageProps {}
+const CategoryPage: FC = () => {
+	const { addToast: toast } = useToast();
+	const { categories, subCategories } = useAppSelector(
+		(state) => state.services
+	);
+	const [selectedItem, setSelectedItem] = useState<{
+		item: Models.Document;
+		type: "category" | "subcategory";
+	} | null>(null);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const dispatch = useAppDispatch();
 
-const Category: FC<pageProps> = () => {
-	const totalPages = useSelector((state: RootState) => state.util.totalPages);
+	// Memoize toast function to prevent unnecessary re-renders
+	const showError = useCallback(
+		(message: string) => {
+			toast.error(message);
+		},
+		[toast]
+	);
 
-	const searchParams = useSearchParams();
-	let page = searchParams.get("page") as string;
-	console.log(page);
+	const showSuccess = useCallback(
+		(message: string) => {
+			toast.success(message);
+		},
+		[toast]
+	);
 
-	if (page === null) page = "1";
+	// Remove toast from fetchData dependencies
+	const fetchData = useCallback(async () => {
+		try {
+			const { categories } = await serviceManager.getCategories();
+			const { subCategories } = await serviceManager.getSubCategories();
+			dispatch(setCategories(categories as any));
+			dispatch(setSubCategories(subCategories as any));
+		} catch (error) {
+			showError("Failed to fetch data");
+		}
+	}, [dispatch, showError]); // More stable dependencies
 
+	// Only fetch data on mount
 	useEffect(() => {
-		const serviceApis = new Service();
-		serviceApis.getCategories(Number(page));
-	}, [page]);
+		fetchData();
+	}, []); // Empty dependency array
+
+	const handleEdit = useCallback(
+		(item: Models.Document, type: "category" | "subcategory") => {
+			setSelectedItem({ item, type });
+			setIsModalOpen(true);
+		},
+		[]
+	);
+
+	const handleDelete = useCallback(
+		async (id: string, type: "category" | "subcategory") => {
+			try {
+				const collectionId =
+					type === "category"
+						? COLLECTION_IDS.CATEGORIES
+						: COLLECTION_IDS.SUB_CATEGORIES;
+
+				await serviceManager.deleteCategory(id, collectionId);
+				showSuccess(`${type} deleted successfully`);
+				await fetchData();
+			} catch (error) {
+				showError(`Failed to delete ${type}`);
+			}
+		},
+		[fetchData, showError, showSuccess]
+	);
+
+	const handleSubmit = useCallback(
+		async (data: any) => {
+			try {
+				if (!selectedItem) return;
+
+				const collectionId =
+					selectedItem.type === "category"
+						? COLLECTION_IDS.CATEGORIES
+						: COLLECTION_IDS.SUB_CATEGORIES;
+
+				await serviceManager.editCategory(
+					data as Partial<ServiceCategory>,
+					selectedItem.item.$id,
+					collectionId
+				);
+
+				showSuccess("Updated successfully");
+				setIsModalOpen(false);
+				await fetchData();
+			} catch (error) {
+				showError("Failed to update");
+			}
+		},
+		[selectedItem, fetchData, showSuccess, showError]
+	);
+
 	return (
 		<section className="flex flex-col gap-7 pb-12">
 			<div className="flex justify-between items-center pl-4 lg:pr-16 lg:pl-6 bg-white w-full h-16">
-				<div className="flex items-center justify-between gap-16">
-					<div className="flex justify-start items-center gap-2">
-						<h1 className="text-lg lg:pl-0 lg:text-lg leading-3 text-afruna-blue font-semibold">
-							Services
-						</h1>
-						<h1 className="text-lg lg:pl-0 lg:text-base leading-3 text-gray-300 font-semibold">
-							Category
-						</h1>
-					</div>
-					{/* <fieldset className="flex items-center gap-1 px-2 border border-slate-300 rounded-md overflow-hidden">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full py-[0.6rem] text-xs text-slate-600"
-            />
-            <IoSearchOutline className="text-slate-300 text-2xl " />
-          </fieldset> */}
+				<div className="flex items-center gap-2">
+					<h1 className="text-lg font-semibold text-afruna-blue">Services</h1>
+					<h1 className="text-lg font-semibold text-gray-300">Categories</h1>
 				</div>
-				<div className="flex justify-end items-center gap-6">
-					{/* <fieldset className="flex">
-            <ItemPicker
-              items={["A", "B"]}
-              placeholder={"A-Z"}
-              getSelected={(val) => console.log(val as string)}
-              // contentClassName={"p-2 bg-white text-xs"}
-              triggerClassName="px-3 py-[0.59rem] rounded min-w-[8rem] w-full"
-            />
-          </fieldset> */}
+				<div className="flex items-center gap-4">
 					<Link
-						href={"/create_category"}
+						href="/create_category"
 						className={buttonVariants({ variant: "greenbutton" })}
 					>
-						<BsPlus className="font-extrabold text-xl" /> Add Category
+						<BsPlus className="text-xl" /> Add Category
 					</Link>
 					<Link
-						href={"/create_subcategory"}
+						href="/create_subcategory"
 						className={buttonVariants({ variant: "greenbutton" })}
 					>
-						<BsPlus className="font-extrabold text-xl" /> Add Subcategory
+						<BsPlus className="text-xl" /> Add Subcategory
 					</Link>
 				</div>
 			</div>
-			<div className="flex flex-col gap-6 px-6 xl:pr-96 w-full">
-				<CategoryTable />
-				<Pagination page={page} totalPages={totalPages} />
+
+			<div className="px-6 xl:pr-96 w-full">
+				<CategoryTable
+					categories={categories as any}
+					subCategories={subCategories as any}
+					onEdit={handleEdit}
+					onDelete={handleDelete}
+				/>
 			</div>
+
+			{isModalOpen && selectedItem && (
+				<Modal
+					height
+					onClose={() => setIsModalOpen(false)}
+					isOpen={isModalOpen}
+				>
+					<EditCategoryForm
+						selectedService={selectedItem.item}
+						type={selectedItem.type}
+						onSubmit={handleSubmit}
+					/>
+				</Modal>
+			)}
 		</section>
 	);
 };
 
-export default Category;
+export default withAuth(CategoryPage);
