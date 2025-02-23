@@ -6,6 +6,9 @@ export interface IService {
 	duration: number;
 	categoryId: string;
 	subcategoryId: string;
+	isVerified: boolean;
+	isBlocked: boolean;
+	isActive: boolean;
 	providerId: string;
 	images: string[];
 	availability: {
@@ -13,13 +16,10 @@ export interface IService {
 		startTime: string;
 		endTime: string;
 	}[];
-	location?: {
-		latitude: number;
-		longitude: number;
-	};
+	location?: number[];
 	isRemoteService: boolean;
 	maxParticipants: number;
 	cancellationPolicy: "flexible" | "moderate" | "strict";
-	status: "active" | "inactive" | "pending";
+	status: "active" | "inactive" | "draft" | "pending";
 	tags: string[];
 }
