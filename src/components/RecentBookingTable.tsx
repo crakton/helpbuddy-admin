@@ -16,7 +16,6 @@ import Image from "next/image";
 import { imgs } from "@/constants/images";
 import { BiChevronDown, BiChevronUp } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import { ImSpinner3 } from "react-icons/im";
 
 interface RecentBookingTableProps {
@@ -27,9 +26,6 @@ interface RecentBookingTableProps {
 const RecentBookingTable: FC<RecentBookingTableProps> = ({
 	loadingRecentBookings,
 }) => {
-	const recentBookings = useSelector(
-		(state: RootState) => state.booking.recentBookings
-	);
 	const [rowSelection, setRowSelection] = useState({});
 	const [data, setData] = useState<any[]>([]);
 	const [sorting, setSorting] = useState<SortingState>([]);
@@ -48,9 +44,9 @@ const RecentBookingTable: FC<RecentBookingTableProps> = ({
 	};
 
 	useEffect(() => {
-		const updatedDataWithIds = assignUniqueIds(recentBookings);
+		const updatedDataWithIds = assignUniqueIds([]);
 		setData(updatedDataWithIds);
-	}, [recentBookings]);
+	}, []);
 
 	const columns = useMemo<ColumnDef<any>[]>(
 		() => [
@@ -253,7 +249,7 @@ const RecentBookingTable: FC<RecentBookingTableProps> = ({
 				<div className="flex justify-center items-center h-full">
 					<ImSpinner3 className="h-10 w-10 animate-spin text-slate-400" />
 				</div>
-			) : recentBookings?.length > 0 ? (
+			) : [].length > 0 ? (
 				<table className=" w-screen lg:w-full px-4 relative">
 					<thead className="sticky top-0 bg-white z-20">
 						{table.getHeaderGroups().map((headerGroup) => (
