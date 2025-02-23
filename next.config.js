@@ -9,9 +9,14 @@ const nextConfig = {
 		APPWRITE_API_KEY: process.env.APPWRITE_API_KEY,
 		APPWRITE_DB_ID: process.env.APPWRITE_DB_ID,
 	},
-
 	images: {
-		domains: [],
+		remotePatterns: [
+			{
+				protocol: "https",
+				hostname: "cloud.appwrite.io",
+				pathname: "/v1/storage/buckets/**",
+			},
+		],
 	},
 };
 
