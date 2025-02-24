@@ -1,7 +1,7 @@
 "use client";
 
 import { imgs } from "@/constants/images";
-import { RootState } from "@/redux/store";
+import { useAppSelector } from "@/lib/store";
 import Image from "next/image";
 import { FC, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 interface pageProps {}
 
 const ProfilePage: FC<pageProps> = ({}) => {
-	const adminBio = useSelector((state: RootState) => state.auth.userBio);
+	const adminBio = useAppSelector((state) => state.auth.user);
 
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");

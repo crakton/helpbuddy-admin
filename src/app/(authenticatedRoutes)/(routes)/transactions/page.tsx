@@ -1,46 +1,12 @@
 "use client";
 
-import OtherTransactionstable from "@/components/OtherTransactionstable";
-import { RootState } from "@/redux/store";
-import Transactions from "@/services/transactions.service";
 import { FC, useEffect } from "react";
-import { useSelector } from "react-redux";
 
 interface pageProps {}
 export type tableStatus = "Other Transactions" | "Bookings Transactions";
 const transactions_tab = ["Other Transactions", "Bookings Transactions"];
 
 const TransactionsPage: FC<pageProps> = ({}) => {
-	// const [transactionsTab, setTransactionsTab] =
-	//   useState<tableStatus>("Other Transactions");
-	// const handleTabSelect = useCallback((tab: tableStatus) => {
-	//   const transactionApis = new Transactions();
-	//   if (tab === "Other Transactions") {
-	//     transactionApis.getOtherTransactions();
-	//     setTransactionsTab(tab);
-	//   } else {
-	//     transactionApis.getBookingsTransactions();
-	//     setTransactionsTab(tab);
-	//   }
-	// }, []);
-	// const Component = useMemo(() => {
-	//   const transactionApis = new Transactions();
-	//   switch (transactionsTab) {
-	//     case "Bookings Transactions":
-	//       return <BookingsTransactionsTable />;
-	//     default:
-	//       transactionApis.getOtherTransactions();
-	//       return <OtherTransactionstable />;
-	//   }
-	// }, [transactionsTab]);
-	useEffect(() => {
-		const transactionApis = new Transactions();
-		transactionApis.getOtherTransactions();
-	}, []);
-	const transaction = useSelector(
-		(state: RootState) => state.transaction.other_transactions
-	);
-
 	return (
 		<section className="flex flex-col gap-7 ">
 			<div className="flex justify-start items-center pl-4 lg:pl-6 bg-white w-full h-16">
@@ -99,7 +65,6 @@ const TransactionsPage: FC<pageProps> = ({}) => {
           </div>
           <div className="bg-orange-200 w-full h-[2px] " />
         </div> */}
-				<OtherTransactionstable transaction={transaction} />
 			</div>
 		</section>
 	);

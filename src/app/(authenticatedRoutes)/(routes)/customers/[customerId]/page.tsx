@@ -1,12 +1,11 @@
 "use client";
 
-import { RootState } from "@/redux/store";
 import Customers from "@/services/customer.service";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { LoadingUserDetails } from "../../_components/LoadingUserDetails";
 import Image from "next/image";
-import CustomerBookingDetailsTable from "@/components/CustomerBookingDetailsTable";
+import { useAppSelector } from "@/lib/store";
 
 type Params = {
 	params: {
@@ -15,24 +14,11 @@ type Params = {
 };
 
 const CustomerDetailPage = ({ params: { customerId } }: Params) => {
-	const loading = useSelector((state: RootState) => state.loading.loading);
-	const customerCard = useSelector(
-		(state: RootState) => state.customer.customerCard
-	);
-
+	const { loading, customers } = useAppSelector((state) => state.customers);
 	const [loadingBookings, setLoadingBookings] = useState<boolean>(true);
-	useEffect(() => {
-		const customersApis = new Customers();
-		customersApis.getCustomerBookings(customerId).finally(() => {
-			setLoadingBookings(false);
-		});
-		customersApis.getCustomersCard(customerId);
-	}, [customerId]);
-	const customerBookings = useSelector(
-		(state: RootState) => state.customer.customerBookings
-	);
+	useEffect(() => {}, [customerId]);
+	const customerBookings = useAppSelector((state) => state.customers);
 
-	const customers = useSelector((state: RootState) => state.customer.customers);
 	const customer = customers.filter(
 		(customer) => customer.$id === customerId
 	)[0];
@@ -58,12 +44,12 @@ const CustomerDetailPage = ({ params: { customerId } }: Params) => {
 				<>
 					<div className="flex flex-col justify-start gap-2 px-4 md:px-10 xl:pr-32 w-full">
 						<div className="w-[6rem] h-[6rem] overflow-hidden relative rounded-full">
-							{customer?.prefs.avatar ? (
+							{customer?.avatar ? (
 								<Image
 									src={
-										customer.prefs.avatar.includes("https://")
-											? customer.prefs.avatar
-											: `https://${customer.prefs.avatar}`
+										customer.avatar.includes("https://")
+											? customer.avatar
+											: `https://${customer.avatar}`
 									}
 									alt="provider"
 									priority
@@ -71,25 +57,27 @@ const CustomerDetailPage = ({ params: { customerId } }: Params) => {
 								/>
 							) : (
 								<div className=" w-full h-full bg-slate-300 flex justify-center items-center text-sm">{`${
-									customer.name.split(" ")[0][0]
-								} ${customer.name.split(" ")[1][0]}`}</div>
+									customer.fullName.split(" ")[0][0]
+								} ${customer.fullName.split(" ")[1][0]}`}</div>
 							)}
 						</div>
 						<div className="flex flex-col sm:flex-row sm:justify-between items-start gap-4 w-full">
 							<div className="flex flex-col gap-2 text-[#7C7C7C] text-xs font-semibold">
-								<h2 className="text-lg text-afruna-blue">{customer.name}</h2>
+								<h2 className="text-lg text-afruna-blue">
+									{customer.fullName}
+								</h2>
 								<span className=" ">
 									Joined since {`${day} ${month}, ${year}`}
 								</span>
 								{/* state,  */}
-								<span className=" ">{customer?.prefs.country}</span>
+								<span className=" ">{customer?.country}</span>
 								<span className=" ">{customer?.email}</span>
-								<div className="flex flex-col ">
+								{/* <div className="flex flex-col ">
 									<span className="text-sm text-black">
 										{customer?.prefs.following?.length}
 									</span>
 									<p className="">Following</p>
-								</div>
+								</div> */}
 							</div>
 						</div>
 					</div>
@@ -107,12 +95,7 @@ const CustomerDetailPage = ({ params: { customerId } }: Params) => {
 					</div>
 				</>
 			)}
-			<div className="flex justify-start px-4 md:px-10 xl:pr-32 ">
-				<CustomerBookingDetailsTable
-					loadingBookings={loadingBookings}
-					customerBookings={customerBookings}
-				/>
-			</div>
+			<div className="flex justify-start px-4 md:px-10 xl:pr-32 "></div>
 		</section>
 	);
 };

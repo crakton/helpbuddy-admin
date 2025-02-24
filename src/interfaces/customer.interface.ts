@@ -10,4 +10,5 @@ export interface ICustomer {
 	role: string;
 	phone: string;
 	totalBookings?: number;
+	avatar?: string;
 }

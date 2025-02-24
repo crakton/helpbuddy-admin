@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { store, TStore } from "@/lib/store";
 import { COLLECTION_IDS } from "@/constants/collection_id";
 
-interface Review {
+export interface Review {
 	$id?: string;
 	bookingId: string;
 	customerId: string;

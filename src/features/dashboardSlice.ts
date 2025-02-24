@@ -1,5 +1,7 @@
+import { IBooking } from "@/interfaces/booking.interface";
+import { IService } from "@/interfaces/service.interface";
+import { IProvider } from "@/services/provider.service";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IBooking, IService, IProvider } from "@/services/dashboard.service";
 
 interface DashboardState {
 	cards: { title: string; value: number }[];

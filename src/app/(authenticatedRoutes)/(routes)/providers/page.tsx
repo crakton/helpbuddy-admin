@@ -1,11 +1,9 @@
 "use client";
 
 import { FC, useEffect } from "react";
-import ProvidersTable from "@/components/ProvidersTable";
 import { IoSearchOutline } from "react-icons/io5";
 import ItemPicker from "@/components/ItemPicker";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 import Provider from "@/services/provider.service";
 import { useSearchParams } from "next/navigation";
 import Pagination from "../_components/Pagination";
@@ -19,8 +17,6 @@ export type tableStatus =
 	| "rejected"
 	| "delected";
 const ProvidersPage: FC<pageProps> = ({}) => {
-	const totalPages = useSelector((state: RootState) => state.util.totalPages);
-
 	const searchParams = useSearchParams();
 	let page = searchParams.get("page") as string;
 	console.log(page);
@@ -56,10 +52,7 @@ const ProvidersPage: FC<pageProps> = ({}) => {
           </fieldset> */}
 				</div>
 			</div>
-			<div className="flex flex-col px-6 xl:pr-32 w-full">
-				<ProvidersTable />
-				<Pagination page={page} totalPages={totalPages} />
-			</div>
+			{/* Table for providers */}
 		</section>
 	);
 };

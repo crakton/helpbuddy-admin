@@ -1,27 +1,14 @@
 "use client";
-
-import CustomerBookingDetailsTable from "@/components/CustomerBookingDetailsTable";
 import DocumentReviewTable from "@/components/DocumentReviewTable";
-import ItemPicker from "@/components/ItemPicker";
 import { Button } from "@/components/ui/button";
 import { imgs } from "@/constants/images";
-import { RootState, store } from "@/redux/store";
 import Provider from "@/services/provider.service";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BsStar, BsStarFill, BsStarHalf } from "react-icons/bs";
 import { IoMdCheckmark } from "react-icons/io";
-import { IoSearchOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
 import { LoadingProviderDetails } from "../../_components/LoadingProviderDetails";
-import { setConversations } from "@/redux/features/app/chat_slice";
 import { useRouter } from "next/navigation";
-import { Card, CardContent } from "@/components/ui/card";
-import location from "../../../../../assests/imgs/location.png";
-import star from "../../../../../assests/imgs/star.png";
-import axios, { AxiosError } from "axios";
-import { handleAuthErrors } from "@/lib/auth.util";
-
 type Params = {
 	params: {
 		providerId: string;
@@ -35,24 +22,25 @@ const statsDetails = [
 
 const ProviderDetailPage = ({ params: { providerId } }: Params) => {
 	const router = useRouter();
-	const userConversations = useSelector(
-		(state: RootState) => state.chat.conversations
-	);
-	const providerServices = useSelector(
-		(state: RootState) => state.provider.providerService
-	);
-	const providerBookings = useSelector(
-		(state: RootState) => state.provider.providerBookings
-	);
-	const loading = useSelector((state: RootState) => state.loading.loading);
+	const [loading, setLoading] = useState(false);
+	const [provider, setProvider] = useState({
+		avatar: "",
+		firstName: "",
+		lastName: "",
+		email: "",
+		country: "",
+	});
 	const [documents, setDocuments] = useState<any[]>([]);
+	const [providerServices, setProviderServices] = useState<any[]>([]);
 	const [cards, setCards] = useState<any>();
 
 	const getCardInfo = async (pid: string) => {};
 
 	useEffect(() => {
 		const providerApis = new Provider();
-		providerApis.getProviders();
+		providerApis.getProviderServices(providerId).then((services) => {
+			setProviderServices(services);
+		});
 		providerApis.getProviderServices(providerId);
 		providerApis.getProviderBookings(providerId);
 
@@ -60,18 +48,6 @@ const ProviderDetailPage = ({ params: { providerId } }: Params) => {
 
 		// setDocuments([providerServices[0]?.insuranceCoverage, providerServices[0]?.licenseAndCertification])
 	}, [providerId]);
-
-	const providers = useSelector((state: RootState) => state.provider.providers);
-	const provider = providers.filter(
-		(provider) => provider._id === providerId
-	)[0];
-	const createdAtDate = new Date(provider?.createdAt);
-	const year = createdAtDate.getFullYear();
-	const day = createdAtDate.getDate();
-	const monthIndex = createdAtDate.getMonth(); // Months are zero-indexed
-	const month = new Date(year, monthIndex).toLocaleString("en-US", {
-		month: "short",
-	});
 
 	return (
 		<main className="flex flex-col gap-7 mb-12 ">
@@ -105,7 +81,7 @@ const ProviderDetailPage = ({ params: { providerId } }: Params) => {
 								</span>
 							</div>
 							<span className="text-xs ">
-								Provider Since : {`${day} ${month}, ${year}`}
+								Provider Since : {`${new Date().getFullYear()}`}
 							</span>
 							<span className="text-xs font-semibold text-[#666363]">
 								{provider.email}
